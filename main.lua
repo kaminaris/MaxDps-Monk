@@ -52,6 +52,16 @@ local _isSerenity = false;
 local _isHitCombo = false;
 local _isWhirlingDragonPunch = false;
 
+local _HitComboAbilities = {
+	[_BlackoutKick] = 1,
+	[_ChiWave] = 1,
+	[_FistsofFury] = 1,
+	[_RisingSunKick] = 1,
+	[_TigerPalm] = 1,
+	[_TouchofDeath] = 1,
+	[_StrikeoftheWindlord] = 1,
+}
+
 MaxDps.Monk = {};
 
 function MaxDps.Monk.CheckTalents()
@@ -83,7 +93,7 @@ function MaxDps:EnableRotationModule(mode)
 end
 
 function MaxDps:UNIT_SPELLCAST_SUCCEEDED(event, unitID, spell, rank, lineID, spellID)
-	if unitID == 'player' then
+	if unitID == 'player' and _HitComboAbilities[spellID] == 1 then
 		self.lastSpellId = spellID;
 	end
 end
