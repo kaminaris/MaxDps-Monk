@@ -44,14 +44,6 @@ local _HitComboAura = 196741;
 local _Transcendence = 101643;
 local _TranscendenceTransfer = 119996;
 
--- Talents
-local _isChiExplosion = false;
-local _isChiBurst = false;
-local _isChiWave = false;
-local _isSerenity = false;
-local _isHitCombo = false;
-local _isWhirlingDragonPunch = false;
-
 local _HitComboAbilities = {
 	[_BlackoutKick] = 1,
 	[_ChiWave] = 1,
@@ -65,14 +57,6 @@ local _HitComboAbilities = {
 MaxDps.Monk = {};
 
 function MaxDps.Monk.CheckTalents()
-	MaxDps:CheckTalents();
-	_isChiExplosion = MaxDps:HasTalent(_ChiExplosion);
-	_isChiBurst = MaxDps:HasTalent(_ChiBurst);
-	_isChiWave = MaxDps:HasTalent(_ChiWave);
-	_isSerenity = MaxDps:HasTalent(_Serenity);
-	_isHitCombo = MaxDps:HasTalent(_HitCombo);
-	_isWhirlingDragonPunch = MaxDps:HasTalent(_WhirlingDragonPunch);
-	-- other checking functions
 end
 
 function MaxDps:EnableRotationModule(mode)
@@ -98,67 +82,15 @@ function MaxDps:UNIT_SPELLCAST_SUCCEEDED(event, unitID, spell, rank, lineID, spe
 	end
 end
 
-function MaxDps.Monk.Brewmaster()
-	local timeShift, currentSpell, gcd = MaxDps:EndCast();
-
---	local chi = UnitPower('player', SPELL_POWER_CHI);
-	--	local energy = UnitPower('player', SPELL_POWER_ENERGY);
-	--	local stagger = UnitStagger('player');
-	--
-	--	local keg = MaxDps:SpellAvailable(_KegSmash, timeShift);
-	--	local harm = MaxDps:SpellAvailable(_ExpelHarm, timeShift);
-	--	local heavyStag = MaxDps:Aura(_HeavyStagger, timeShift);
-	--	local modStag = MaxDps:Aura(_ModerateStagger, timeShift);
-	--	local shuffle = MaxDps:Aura(_Shuffle, timeShift);
-	--
-	--	local eb, ebCharges = MaxDps:Aura(_ElusiveBrewAura);
-	--
-	--	if eb and ebCharges > 9 then
-	--		return _ElusiveBrew;
-	--	end
-	--
-	--	if heavyStag or modStag and chi > 1 then
-	--		return _PurifyingBrew;
-	--	end
-	--
-	--	if _isChiExplosion then
-	--		if chi >= 1 and not shuffle then
-	--			return _ChiExplosion;
-	--		end
-	--		if chi >= 4 then
-	--			return _ChiExplosion;
-	--		end
-	--	else
-	--		if chi >= 1 and not shuffle then
-	--			return _BlackoutKick;
-	--		end
-	--	end
-	--
-	--	if keg and energy > 35 then
-	--		return _KegSmash;
-	--	end
-	--
-	--	if harm and energy > 35 then
-	--		return _ExpelHarm;
-	--	end
-	--
-	--	if energy > 35 then
-	--		return _Jab;
-	--	end
-	--
-	--	return _TigerPalm;
+function MaxDps.Monk.Brewmaster(_, timeShift, currentSpell, gcd, talents)
 	return nil;
 end
 
-function MaxDps.Monk.Mistweaver()
-	local timeShift, currentSpell, gcd = MaxDps:EndCast();
-
+function MaxDps.Monk.Mistweaver(_, timeShift, currentSpell, gcd, talents)
 	return nil;
 end
 
-function MaxDps.Monk.Windwalker()
-	local timeShift, currentSpell, gcd = MaxDps:EndCast();
-
+function MaxDps.Monk.Windwalker(_, timeShift, currentSpell, gcd, talents)
 	local chi = UnitPower('player', SPELL_POWER_CHI);
 	local energy = UnitPower('player', SPELL_POWER_ENERGY);
 	local energyMax = UnitPowerMax('player', SPELL_POWER_ENERGY);
@@ -168,10 +100,21 @@ function MaxDps.Monk.Windwalker()
 	local rsk = MaxDps:SpellAvailable(_RisingSunKick, timeShift);
 	local fotf, fotfCd = MaxDps:SpellAvailable(_FistsofFury, timeShift);
 
-	MaxDps:GlowCooldown(_StormEarthandFire, MaxDps:SpellAvailable(_StormEarthandFire, timeShift));
+	if talents[_StormEarthandFire] then
+		MaxDps:GlowCooldown(_StormEarthandFire, MaxDps:SpellAvailable(_StormEarthandFire, timeShift));
+	end
+
+	if talents[_Serenity] then
+		MaxDps:GlowCooldown(_Serenity, MaxDps:SpellAvailable(_Serenity, timeShift));
+	end
+
 	MaxDps:GlowCooldown(_TouchofDeath, MaxDps:SpellAvailable(_TouchofDeath, timeShift));
 
-	if _isWhirlingDragonPunch and not fotf and not rsk and MaxDps:SpellAvailable(_WhirlingDragonPunch, timeShift) then
+	if talents[_WhirlingDragonPunch]
+		and not fotf
+		and not rsk
+		and MaxDps:SpellAvailable(_WhirlingDragonPunch, timeShift)
+	then
 		return _WhirlingDragonPunch;
 	end
 
@@ -191,7 +134,7 @@ function MaxDps.Monk.Windwalker()
 		return _RisingSunKick;
 	end
 
-	if _isChiWave and MaxDps:SpellAvailable(_ChiWave, timeShift) then
+	if talents[_ChiWave] and MaxDps:SpellAvailable(_ChiWave, timeShift) then
 		return _ChiWave;
 	end
 
