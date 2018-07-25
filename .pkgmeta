@@ -1,0 +1,6 @@
+package-as: MaxDps_Monk
+enable-nolib-creation: no
+
+ignore:
+    - README.md
+    - CHANGELOG.md

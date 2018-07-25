@@ -1,8 +1,10 @@
 ## Title: MaxDps_Monk
-## Version: 7.3.0
+## Version: 8.0.0
 ## Author: Kaminaris
-## Interface: 70300
+## Interface: 80000
 ## Dependencies: MaxDps
 ## LoadOnDemand: 1
+## X-Curse-Project-ID: 255355
+## X-WoWI-ID: 24647
 
 main.lua
