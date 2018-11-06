@@ -213,7 +213,7 @@ function Monk:WindwalkerAoe()
 	end
 
 	-- chi_wave;
-	if cooldown[WW.ChiWave].ready then
+	if talents[WW.ChiWave] and cooldown[WW.ChiWave].ready then
 		return WW.ChiWave;
 	end
 
@@ -313,7 +313,7 @@ function Monk:WindwalkerSingleTarget()
 	end
 
 	-- chi_wave;
-	if cooldown[WW.ChiWave].ready then
+	if talents[WW.ChiWave] and cooldown[WW.ChiWave].ready then
 		return WW.ChiWave;
 	end
 
