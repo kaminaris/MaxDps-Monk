@@ -36,6 +36,7 @@ local WW = {
 	InvokeXuenTheWhiteTiger = 123904,
 	StormEarthAndFire       = 137639,
 	SwiftRoundhouse         = 277669,
+	BokProc                 = 116768
 };
 
 local spellMeta = {
@@ -260,7 +261,8 @@ function Monk:WindwalkerSingleTarget()
 	fd.chi, fd.chiMax, fd.energy, fd.energyRegen, fd.energyMax, fd.energyTimeToMax, fd.targets;
 
 	-- cancel_buff,name=rushing_jade_wind,if=active_enemies=1&(!talent.serenity.enabled|cooldown.serenity.remains>3);
-	if talents[WW.RushingJadeWind] and targets == 1 and (not talents[WW.Serenity] or cooldown[WW.Serenity].remains > 3) then
+	if talents[WW.RushingJadeWind] and targets == 1 and buff[WW.RushingJadeWind].up and
+		(not talents[WW.Serenity] or cooldown[WW.Serenity].remains > 3) then
 		return WW.RushingJadeWind;
 	end
 
