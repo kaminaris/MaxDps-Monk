@@ -153,7 +153,7 @@ function Monk:WindwalkerAoe()
 		fd.chi, fd.chiMax, fd.energy, fd.energyRegen, fd.energyMax, fd.energyTimeToMax, fd.targets;
 
 	-- whirling_dragon_punch;
-	if cooldown[WW.WhirlingDragonPunch].ready and
+	if talents[WW.WhirlingDragonPunch] and cooldown[WW.WhirlingDragonPunch].ready and
 		not cooldown[WW.FistsOfFury].ready and not cooldown[WW.RisingSunKick].ready
 	then
 		return WW.WhirlingDragonPunch;
@@ -267,7 +267,7 @@ function Monk:WindwalkerSingleTarget()
 	end
 
 	-- whirling_dragon_punch;
-	if cooldown[WW.WhirlingDragonPunch].ready and
+	if talents[WW.WhirlingDragonPunch] and cooldown[WW.WhirlingDragonPunch].ready and
 		not cooldown[WW.FistsOfFury].ready and not cooldown[WW.RisingSunKick].ready
 	then
 		return WW.WhirlingDragonPunch;
