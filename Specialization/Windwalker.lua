@@ -1,18 +1,15 @@
-﻿--- @type MaxDps
-if not MaxDps then
-	return ;
-end
+local _, addonTable = ...;
+
+--- @type MaxDps
+if not MaxDps then return end
 
 local MaxDps = MaxDps;
 local UnitPower = UnitPower;
 local UnitPowerMax = UnitPowerMax;
-
-local Monk = MaxDps:NewModule('Monk');
-
--- Auras
-local _HitComboAura = 196741;
-local _BlackoutKickAura = 116768;
-local _RushingJadeWindAura = 148187;
+local GetPowerRegen = GetPowerRegen;
+local Chi = Enum.PowerType.Chi;
+local Energy = Enum.PowerType.Energy;
+local Monk = addonTable.Monk;
 
 local WW = {
 	ChiBurst                = 123986,
@@ -39,46 +36,18 @@ local WW = {
 	BokProc                 = 116768
 };
 
-local spellMeta = {
-	__index = function(t, k)
-		print('Spell Key ' .. k .. ' not found!');
-	end
-}
-
-setmetatable(WW, spellMeta);
-
-function Monk:Enable()
-	MaxDps:Print(MaxDps.Colors.Info .. 'Monk [Brewmaster, Mistweaver, Windwalker]');
-
-	if MaxDps.Spec == 1 then
-		MaxDps.NextSpell = Monk.Brewmaster;
-	elseif MaxDps.Spec == 2 then
-		MaxDps.NextSpell = Monk.Mistweaver;
-	elseif MaxDps.Spec == 3 then
-		MaxDps.NextSpell = Monk.Windwalker;
-	end ;
-
-	return true;
-end
-
-function Monk:Brewmaster(timeShift, currentSpell, gcd, talents)
-	return nil;
-end
-
-function Monk:Mistweaver(timeShift, currentSpell, gcd, talents)
-	return nil;
-end
+setmetatable(WW, Monk.spellMeta);
 
 function Monk:Windwalker()
 	local fd = MaxDps.FrameData;
 	local cooldown, buff, debuff, talents, azerite, currentSpell, spellHistory =
-		fd.cooldown, fd.buff, fd.debuff, fd.talents, fd.azerite, fd.currentSpell, fd.spellHistory;
+	fd.cooldown, fd.buff, fd.debuff, fd.talents, fd.azerite, fd.currentSpell, fd.spellHistory;
 
-	local chi = UnitPower('player', Enum.PowerType.Chi);
-	local chiMax = UnitPowerMax('player', Enum.PowerType.Chi);
-	local energy = UnitPower('player', Enum.PowerType.Energy);
+	local chi = UnitPower('player', Chi);
+	local chiMax = UnitPowerMax('player', Chi);
+	local energy = UnitPower('player', Energy);
 	local energyRegen = GetPowerRegen();
-	local energyMax = UnitPowerMax('player', Enum.PowerType.Energy);
+	local energyMax = UnitPowerMax('player', Energy);
 	local energyTimeToMax = (energyMax - energy) / energyRegen;
 
 	local targets = MaxDps:SmartAoe();
@@ -97,7 +66,7 @@ function Monk:Windwalker()
 		MaxDps:GlowCooldown(
 			WW.StormEarthAndFire,
 			cooldown[WW.StormEarthAndFire].charges == 2 or
-			(cooldown[WW.StormEarthAndFire].ready and cooldown[WW.FistsOfFury].remains <= 6 and chi >= 3 and cooldown[WW.RisingSunKick].remains <= 1)
+				(cooldown[WW.StormEarthAndFire].ready and cooldown[WW.FistsOfFury].remains <= 6 and chi >= 3 and cooldown[WW.RisingSunKick].remains <= 1)
 		);
 	else
 		-- serenity,if=cooldown.rising_sun_kick.remains<=2|target.time_to_die<=12;
@@ -123,8 +92,8 @@ function Monk:Windwalker()
 
 	-- fist_of_the_white_tiger,if=(energy.time_to_max<1|(talent.serenity.enabled&cooldown.serenity.remains<2))&chi.max-chi>=3;
 	if talents[WW.FistOfTheWhiteTiger] and cooldown[WW.FistOfTheWhiteTiger].ready and
-		energy >= 40 and 
-		(energyTimeToMax < 1 or (talents[WW.Serenity] and cooldown[WW.Serenity].remains < 2)) and 
+		energy >= 40 and
+		(energyTimeToMax < 1 or (talents[WW.Serenity] and cooldown[WW.Serenity].remains < 2)) and
 		chiMax - chi >= 3 then
 		return WW.FistOfTheWhiteTiger;
 	end
@@ -148,9 +117,9 @@ end
 function Monk:WindwalkerAoe()
 	local fd = MaxDps.FrameData;
 	local cooldown, buff, debuff, talents, azerite, currentSpell, spellHistory,
-		chi, chiMax, energy, energyRegen, energyMax, energyTimeToMax, targets =
-		fd.cooldown, fd.buff, fd.debuff, fd.talents, fd.azerite, fd.currentSpell, fd.spellHistory,
-		fd.chi, fd.chiMax, fd.energy, fd.energyRegen, fd.energyMax, fd.energyTimeToMax, fd.targets;
+	chi, chiMax, energy, energyRegen, energyMax, energyTimeToMax, targets =
+	fd.cooldown, fd.buff, fd.debuff, fd.talents, fd.azerite, fd.currentSpell, fd.spellHistory,
+	fd.chi, fd.chiMax, fd.energy, fd.energyRegen, fd.energyMax, fd.energyTimeToMax, fd.targets;
 
 	-- whirling_dragon_punch;
 	if talents[WW.WhirlingDragonPunch] and cooldown[WW.WhirlingDragonPunch].ready and
@@ -185,7 +154,7 @@ function Monk:WindwalkerAoe()
 	-- spinning_crane_kick,if=!prev_gcd.1.spinning_crane_kick&(((chi>3|cooldown.fists_of_fury.remains>6)&(chi>=5|cooldown.fists_of_fury.remains>2))|energy.time_to_max<=3);
 	if chi >= 2 and spellHistory[1] ~= WW.SpinningCraneKick and (
 		((chi > 3 or cooldown[WW.FistsOfFury].remains > 6) and (chi >= 5 or cooldown[WW.FistsOfFury].remains > 2)) or
-		energyTimeToMax <= 3
+			energyTimeToMax <= 3
 	)
 	then
 		return WW.SpinningCraneKick;

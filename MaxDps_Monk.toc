@@ -1,5 +1,5 @@
 ## Title: MaxDps_Monk
-## Version: 8.1.0
+## Version: 8.1.5
 ## Author: Kaminaris
 ## Interface: 80100
 ## Dependencies: MaxDps
@@ -7,4 +7,7 @@
 ## X-Curse-Project-ID: 255355
 ## X-WoWI-ID: 24647
 
-main.lua
+Main.lua
+Specialization\Brewmaster.lua
+Specialization\Mistweaver.lua
+Specialization\Windwalker.lua
