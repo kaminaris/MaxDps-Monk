@@ -51,9 +51,9 @@ function Monk:Brewmaster()
 	local healthMax = UnitHealthMax('player');
 
 	-- gift_of_the_ox,if=health<health.max*0.65;
-	if health < healthMax * 0.65 then
-		return BR.GiftOfTheOx;
-	end
+	--if health < healthMax * 0.65 then
+	--	return BR.GiftOfTheOx;
+	--end
 
 	-- dampen_harm,if=incoming_damage_1500ms&buff.fortifying_brew.down;
 	--if talents[BR.DampenHarm] and cooldown[BR.DampenHarm].ready and (incomingDamage1500ms and not buff[BR.FortifyingBrew].up) then
