@@ -50,6 +50,8 @@ function Monk:Brewmaster()
 	local health = UnitHealth('player');
 	local healthMax = UnitHealthMax('player');
 
+	MaxDps:GlowEssences();
+
 	-- gift_of_the_ox,if=health<health.max*0.65;
 	--if health < healthMax * 0.65 then
 	--	return BR.GiftOfTheOx;

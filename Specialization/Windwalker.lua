@@ -59,6 +59,7 @@ function Monk:Windwalker()
 		MaxDps:GlowCooldown(WW.InvokeXuenTheWhiteTiger, cooldown[WW.InvokeXuenTheWhiteTiger].ready);
 	end
 
+	MaxDps:GlowEssences();
 	MaxDps:GlowCooldown(WW.TouchOfDeath, cooldown[WW.TouchOfDeath].ready);
 
 	if not talents[WW.Serenity] then
