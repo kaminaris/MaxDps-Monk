@@ -25,6 +25,16 @@ local BR = {
 	CelestialBrew			= 322507,
 	SpinningCraneKick		= 322729,
 	HealingElixir			= 122281,
+	RisingSunKick			= 107428,
+	ChiWave					= 115098,
+	ChiBurst				= 123986,
+	SummonWhiteTigerStatue	= 388686,
+	BonedustBrew			= 386276,
+	ExplodingKeg			= 325153,
+	WeaponsOfOrder			= 387184,
+	CharredPassions 		= 386965,
+	BlackoutCombo 			= 196736,
+	BlackOxBrew				= 115399,
 };
 
 function Monk:Brewmaster()
@@ -52,6 +62,7 @@ function Monk:Brewmaster()
 	MaxDps:GlowCooldown(BR.TouchOfDeath,cooldown[BR.TouchOfDeath].ready and targetHealthPercent < 15 and targetHealth < health and targetHealth > 0);
 	--Niuzao on CD
 	MaxDps:GlowCooldown(BR.InvokeNiuzao,cooldown[BR.InvokeNiuzao].ready);
+	
 	--DEFENSIVE GOES FIRST
 	if staggerPercent > 60 and cooldown[BR.CelestialBrew].ready then
 		return BR.CelestialBrew;
@@ -73,8 +84,36 @@ function Monk:Brewmaster()
 		return BR.PurifyingBrew;
 	end
 
+	if buff[BR.BlackoutCombo].up and cooldown[BR.TigerPalm].ready and targets < 2 then
+		return BR.TigerPalm;
+	end
+
+	if talents[BR.BlackOxBrew] and cooldown[BR.BlackOxBrew].ready and energy + energyRegen <= 40 then
+		return BR.BlackOxBrew;
+	end
+
+	if talents[BR.WeaponsOfOrder] and cooldown[BR.WeaponsOfOrder].ready then
+		return BR.WeaponsOfOrder;
+	end
+
+	if talents[BR.SummonWhiteTigerStatue] and cooldown[BR.SummonWhiteTigerStatue].ready then
+		return BR.SummonWhiteTigerStatue;
+	end
+
+	if talents[BR.BonedustBrew] and cooldown[BR.BonedustBrew].ready then
+		return BR.BonedustBrew;
+	end
+
+	if talents[BR.ExplodingKeg] and cooldown[BR.ExplodingKeg].ready then
+		return BR.ExplodingKeg;
+	end
+
 	if cooldown[BR.KegSmash].ready then
 		return BR.KegSmash;
+	end
+
+	if cooldown[BR.RisingSunKick].ready then
+		return BR.RisingSunKick;
 	end
 
 	if cooldown[BR.BlackoutKick].ready then
@@ -89,9 +128,20 @@ function Monk:Brewmaster()
 		return BR.RushingJadeWind;
 	end
 
-	if energy >= 65 and targets < 3 then
+	if talents[BR.WeaponsOfOrder] and cooldown[BR.TigerPalm].ready and targets < 2 then
 		return BR.TigerPalm;
-	elseif energy >=65 and targets >= 3 then
+	end
+
+	if energy >=65 and targets >= 2 then
 		return BR.SpinningCraneKick;
 	end
+
+	if talents[BR.ChiWave] and cooldown[BR.ChiWave].ready then
+		return BR.ChiWave;
+	end
+
+	if talents[BR.ChiBurst] and cooldown[BR.ChiBurst].ready then
+		return BR.ChiBurst;
+	end
+
 end
