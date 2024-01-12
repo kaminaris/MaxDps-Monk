@@ -52,7 +52,7 @@ function Monk:Mistweaver()
     local talents = fd.talents;
     local targets = fd.targets;
     local gcd = fd.gcd;
-    local targetHp = MaxDps:TargetPercentHealth() * 100;
+    local targetHp = UnitHealth('target')
     local health = UnitHealth('player');
     local healthMax = UnitHealthMax('player');
     local healthPercent = ( health / healthMax ) * 100;
