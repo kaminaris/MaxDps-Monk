@@ -213,6 +213,28 @@ local function opener()
 end
 local function trinkets()
 end
+
+local function bdb_setup()
+    if (MaxDps:FindSpell(classtable.StrikeoftheWindlord) and CheckSpellCosts(classtable.StrikeoftheWindlord, 'StrikeoftheWindlord')) and (talents[classtable.Thunderfist] and targets >3) and cooldown[classtable.StrikeoftheWindlord].ready then
+        return classtable.StrikeoftheWindlord
+    end
+    if (MaxDps:FindSpell(classtable.BonedustBrew) and CheckSpellCosts(classtable.BonedustBrew, 'BonedustBrew') and talents[classtable.BonedustBrew]) and ((targets==5) and Chi >= 4) and cooldown[classtable.BonedustBrew].ready then
+        return classtable.BonedustBrew
+    end
+    if (MaxDps:FindSpell(classtable.TigerPalm) and CheckSpellCosts(classtable.TigerPalm, 'TigerPalm')) and (IsComboStrike(classtable.TigerPalm) and ChiMax - Chi >= 2 and buff[classtable.StormEarthandFireBuff].up) and cooldown[classtable.TigerPalm].ready then
+        return classtable.TigerPalm
+    end
+    if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick) and not talents[classtable.WhirlingDragonPunch] and not (targets==5)) and cooldown[classtable.BlackoutKick].ready then
+        return classtable.BlackoutKick
+    end
+    if (MaxDps:FindSpell(classtable.RisingSunKick) and CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and (IsComboStrike(classtable.RisingSunKick) and Chi >= 5 and talents[classtable.WhirlingDragonPunch]) and cooldown[classtable.RisingSunKick].ready then
+        return classtable.RisingSunKick
+    end
+    if (MaxDps:FindSpell(classtable.RisingSunKick) and CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and (IsComboStrike(classtable.RisingSunKick) and targets >= 2 and talents[classtable.WhirlingDragonPunch]) and cooldown[classtable.RisingSunKick].ready then
+        return classtable.RisingSunKick
+    end
+end
+
 local function cd_sef()
     if (MaxDps:FindSpell(classtable.InvokeXuentheWhiteTiger) and CheckSpellCosts(classtable.InvokeXuentheWhiteTiger, 'InvokeXuentheWhiteTiger') and talents[classtable.InvokeXuentheWhiteTiger]) and (not hold_xuen and ttd >25 and talents[classtable.BonedustBrew] and cooldown[classtable.BonedustBrew].duration <= 5 and ( targets <3 and Chi >= 3 or targets >= 3 and Chi >= 2 ) or ttd <25) and cooldown[classtable.InvokeXuentheWhiteTiger].ready then
         return classtable.InvokeXuentheWhiteTiger
@@ -232,12 +254,12 @@ local function cd_sef()
     if (MaxDps:FindSpell(classtable.BonedustBrew) and CheckSpellCosts(classtable.BonedustBrew, 'BonedustBrew') and talents[classtable.BonedustBrew]) and (( not buff[classtable.BonedustBrewBuff] and buff[classtable.StormEarthandFireBuff].up and buff[classtable.StormEarthandFireBuff].remains <11 and (targets==5) ) or ( not buff[classtable.BonedustBrewBuff] and ttd <30 and ttd >10 and (targets==5) and Chi >= 4 ) or ttd <10 or ( not debuff[classtable.SkyreachExhaustionDeBuff].up and targets >= 4 and (GetSpellCount(101546)) >= 2 ) or ( ( UnitExists('pet') and UnitName('pet')  == 'xuen' ) and (targets==5) and targets >= 4 )) and cooldown[classtable.BonedustBrew].ready then
         return classtable.BonedustBrew
     end
-    --local bdb_setupCheck = bdb_setup()
-    --if (not buff[classtable.BonedustBrewBuff] and talents[classtable.BonedustBrew] and cooldown[classtable.BonedustBrew].duration <= 2 and ( ttd >60 and ( cooldown[classtable.StormEarthandFire].charges >0 or cooldown[classtable.StormEarthandFire].duration >10 ) and ( ( UnitExists('pet') and UnitName('pet')  == 'xuen' ) or cooldown[classtable.InvokeXuentheWhiteTiger].duration >10 or hold_xuen ) or ( ( ( UnitExists('pet') and UnitName('pet')  == 'xuen' ) or cooldown[classtable.InvokeXuentheWhiteTiger].duration >13 ) and ( cooldown[classtable.StormEarthandFire].charges >0 or cooldown[classtable.StormEarthandFire].duration >13 or buff[classtable.StormEarthandFireBuff].up ) ) )) then
-    --    if bdb_setupCheck then
-    --        return bdb_setup()
-    --    end
-    --end
+    local bdb_setupCheck = bdb_setup()
+    if (not buff[classtable.BonedustBrewBuff] and talents[classtable.BonedustBrew] and cooldown[classtable.BonedustBrew].duration <= 2 and ( ttd >60 and ( cooldown[classtable.StormEarthandFire].charges >0 or cooldown[classtable.StormEarthandFire].duration >10 ) and ( ( UnitExists('pet') and UnitName('pet')  == 'xuen' ) or cooldown[classtable.InvokeXuentheWhiteTiger].duration >10 or hold_xuen ) or ( ( ( UnitExists('pet') and UnitName('pet')  == 'xuen' ) or cooldown[classtable.InvokeXuentheWhiteTiger].duration >13 ) and ( cooldown[classtable.StormEarthandFire].charges >0 or cooldown[classtable.StormEarthandFire].duration >13 or buff[classtable.StormEarthandFireBuff].up ) ) )) then
+        if bdb_setupCheck then
+            return bdb_setup()
+        end
+    end
     if (MaxDps:FindSpell(classtable.StormEarthandFire) and CheckSpellCosts(classtable.StormEarthandFire, 'StormEarthandFire') and talents[classtable.StormEarthandFire]) and (ttd <20 or ( cooldown[classtable.StormEarthandFire].charges == 2 and cooldown[classtable.InvokeXuentheWhiteTiger].duration >cooldown[classtable.StormEarthandFire].fullRecharge ) and cooldown[classtable.FistsofFury].duration <= 9 and Chi >= 2 and cooldown[classtable.WhirlingDragonPunch].duration <= 12) and cooldown[classtable.StormEarthandFire].ready then
         return classtable.StormEarthandFire
     end
@@ -1408,26 +1430,6 @@ local function fallthru()
     end
     if (MaxDps:FindSpell(classtable.TigerPalm) and CheckSpellCosts(classtable.TigerPalm, 'TigerPalm')) and cooldown[classtable.TigerPalm].ready then
         return classtable.TigerPalm
-    end
-end
-local function bdb_setup()
-    if (MaxDps:FindSpell(classtable.StrikeoftheWindlord) and CheckSpellCosts(classtable.StrikeoftheWindlord, 'StrikeoftheWindlord')) and (talents[classtable.Thunderfist] and targets >3) and cooldown[classtable.StrikeoftheWindlord].ready then
-        return classtable.StrikeoftheWindlord
-    end
-    if (MaxDps:FindSpell(classtable.BonedustBrew) and CheckSpellCosts(classtable.BonedustBrew, 'BonedustBrew') and talents[classtable.BonedustBrew]) and ((targets==5) and Chi >= 4) and cooldown[classtable.BonedustBrew].ready then
-        return classtable.BonedustBrew
-    end
-    if (MaxDps:FindSpell(classtable.TigerPalm) and CheckSpellCosts(classtable.TigerPalm, 'TigerPalm')) and (IsComboStrike(classtable.TigerPalm) and ChiMax - Chi >= 2 and buff[classtable.StormEarthandFireBuff].up) and cooldown[classtable.TigerPalm].ready then
-        return classtable.TigerPalm
-    end
-    if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick) and not talents[classtable.WhirlingDragonPunch] and not (targets==5)) and cooldown[classtable.BlackoutKick].ready then
-        return classtable.BlackoutKick
-    end
-    if (MaxDps:FindSpell(classtable.RisingSunKick) and CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and (IsComboStrike(classtable.RisingSunKick) and Chi >= 5 and talents[classtable.WhirlingDragonPunch]) and cooldown[classtable.RisingSunKick].ready then
-        return classtable.RisingSunKick
-    end
-    if (MaxDps:FindSpell(classtable.RisingSunKick) and CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and (IsComboStrike(classtable.RisingSunKick) and targets >= 2 and talents[classtable.WhirlingDragonPunch]) and cooldown[classtable.RisingSunKick].ready then
-        return classtable.RisingSunKick
     end
 end
 
