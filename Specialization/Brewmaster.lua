@@ -79,7 +79,7 @@ local function CheckSpellCosts(spell,spellstring)
     local costs = GetSpellPowerCost(spell)
     if type(costs) ~= 'table' and spellstring then print('no cost found for ',spellstring) return true end
     for i,costtable in pairs(costs) do
-        if UnitPower('player', costtable.type) <= costtable.cost then
+        if UnitPower('player', costtable.type) < costtable.cost then
             return false
         end
     end
@@ -128,7 +128,7 @@ local function rotation_pta()
     if (MaxDps:FindSpell(classtable.BlackOxBrew) and CheckSpellCosts(classtable.BlackOxBrew, 'BlackOxBrew')) and (Energy + EnergyRegen <= 40) and cooldown[classtable.BlackOxBrew].ready then
         return classtable.BlackOxBrew
     end
-    if (MaxDps:FindSpell(classtable.BreathofFire) and CheckSpellCosts(classtable.BreathofFire, 'BreathofFire')) and (buff[classtable.CharredPassionsBuff].remains <cooldown[classtable.BlackoutKick].duration and ( buff[classtable.BlackoutComboBuff].up or not talents[classtable.BlackoutCombo] )) and cooldown[classtable.BreathofFire].ready then
+    if (MaxDps:FindSpell(classtable.BreathofFire) and CheckSpellCosts(classtable.BreathofFire, 'BreathofFire')) and (buff[classtable.CharredPassionsBuff].remains <cooldown[classtable.BlackoutKick].remains and ( buff[classtable.BlackoutComboBuff].up or not talents[classtable.BlackoutCombo] )) and cooldown[classtable.BreathofFire].ready then
         return classtable.BreathofFire
     end
     if (MaxDps:FindSpell(classtable.SummonWhiteTigerStatue) and CheckSpellCosts(classtable.SummonWhiteTigerStatue, 'SummonWhiteTigerStatue') and talents[classtable.SummonWhiteTigerStatue]) and cooldown[classtable.SummonWhiteTigerStatue].ready then
@@ -137,7 +137,7 @@ local function rotation_pta()
     if (MaxDps:FindSpell(classtable.BonedustBrew) and CheckSpellCosts(classtable.BonedustBrew, 'BonedustBrew') and talents[classtable.BonedustBrew]) and cooldown[classtable.BonedustBrew].ready then
         return classtable.BonedustBrew
     end
-    if (MaxDps:FindSpell(classtable.ExplodingKeg) and CheckSpellCosts(classtable.ExplodingKeg, 'ExplodingKeg')) and (( ( buff[classtable.BonedustBrewBuff].up ) or ( cooldown[classtable.BonedustBrew].duration >= 20 ) )) and cooldown[classtable.ExplodingKeg].ready then
+    if (MaxDps:FindSpell(classtable.ExplodingKeg) and CheckSpellCosts(classtable.ExplodingKeg, 'ExplodingKeg')) and (( ( buff[classtable.BonedustBrewBuff].up ) or ( cooldown[classtable.BonedustBrew].remains >= 20 ) )) and cooldown[classtable.ExplodingKeg].ready then
         return classtable.ExplodingKeg
     end
     if (MaxDps:FindSpell(classtable.ExplodingKeg) and CheckSpellCosts(classtable.ExplodingKeg, 'ExplodingKeg')) and (( not talents[classtable.BonedustBrew] )) and cooldown[classtable.ExplodingKeg].ready then
@@ -172,7 +172,7 @@ local function rotation_boc()
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.PurifyingBrew) and CheckSpellCosts(classtable.PurifyingBrew, 'PurifyingBrew')) and (( buff[classtable.BlackoutComboBuff].down and ( buff[classtable.RecentPurifiesBuff].down or cooldown[classtable.PurifyingBrew].charges_fractional >( 1 + talents[classtable.ImprovedPurifyingBrew] - 0.1 ) ) ) and talents[classtable.ImprovedInvokeNiuzaotheBlackOx] and ( cooldown[classtable.WeaponsofOrder].duration >40 or cooldown[classtable.WeaponsofOrder].duration <5 )) and cooldown[classtable.PurifyingBrew].ready then
+    if (MaxDps:FindSpell(classtable.PurifyingBrew) and CheckSpellCosts(classtable.PurifyingBrew, 'PurifyingBrew')) and (( buff[classtable.BlackoutComboBuff].down and ( buff[classtable.RecentPurifiesBuff].down or cooldown[classtable.PurifyingBrew].charges >( 1 + talents[classtable.ImprovedPurifyingBrew] - 0.1 ) ) ) and talents[classtable.ImprovedInvokeNiuzaotheBlackOx] and ( cooldown[classtable.WeaponsofOrder].remains >40 or cooldown[classtable.WeaponsofOrder].remains <5 )) and cooldown[classtable.PurifyingBrew].ready then
         return classtable.PurifyingBrew
     end
     if (MaxDps:FindSpell(classtable.WeaponsofOrder) and CheckSpellCosts(classtable.WeaponsofOrder, 'WeaponsofOrder') and talents[classtable.WeaponsofOrder]) and (( buff[classtable.RecentPurifiesBuff].up ) and talents[classtable.ImprovedInvokeNiuzaotheBlackOx]) and cooldown[classtable.WeaponsofOrder].ready then
@@ -211,7 +211,7 @@ local function rotation_boc()
     if (MaxDps:FindSpell(classtable.TigerPalm) and CheckSpellCosts(classtable.TigerPalm, 'TigerPalm')) and (( buff[classtable.BlackoutComboBuff].up and targets == 1 )) and cooldown[classtable.TigerPalm].ready then
         return classtable.TigerPalm
     end
-    if (MaxDps:FindSpell(classtable.BreathofFire) and CheckSpellCosts(classtable.BreathofFire, 'BreathofFire')) and (( buff[classtable.CharredPassionsBuff].remains <cooldown[classtable.BlackoutKick].duration )) and cooldown[classtable.BreathofFire].ready then
+    if (MaxDps:FindSpell(classtable.BreathofFire) and CheckSpellCosts(classtable.BreathofFire, 'BreathofFire')) and (( buff[classtable.CharredPassionsBuff].remains <cooldown[classtable.BlackoutKick].remains )) and cooldown[classtable.BreathofFire].ready then
         return classtable.BreathofFire
     end
     if (MaxDps:FindSpell(classtable.KegSmash) and CheckSpellCosts(classtable.KegSmash, 'KegSmash')) and (( buff[classtable.WeaponsofOrderBuff].up and debuff[classtable.WeaponsofOrderDebuffDeBuff].count <= 3 )) and cooldown[classtable.KegSmash].ready then
@@ -232,7 +232,7 @@ local function rotation_boc()
     if (MaxDps:FindSpell(classtable.ExplodingKeg) and CheckSpellCosts(classtable.ExplodingKeg, 'ExplodingKeg')) and (( buff[classtable.BonedustBrewBuff].up )) and cooldown[classtable.ExplodingKeg].ready then
         return classtable.ExplodingKeg
     end
-    if (MaxDps:FindSpell(classtable.ExplodingKeg) and CheckSpellCosts(classtable.ExplodingKeg, 'ExplodingKeg')) and (( cooldown[classtable.BonedustBrew].duration >= 20 )) and cooldown[classtable.ExplodingKeg].ready then
+    if (MaxDps:FindSpell(classtable.ExplodingKeg) and CheckSpellCosts(classtable.ExplodingKeg, 'ExplodingKeg')) and (( cooldown[classtable.BonedustBrew].remains >= 20 )) and cooldown[classtable.ExplodingKeg].ready then
         return classtable.ExplodingKeg
     end
     if (MaxDps:FindSpell(classtable.ExplodingKeg) and CheckSpellCosts(classtable.ExplodingKeg, 'ExplodingKeg')) and (( not talents[classtable.BonedustBrew] )) and cooldown[classtable.ExplodingKeg].ready then
