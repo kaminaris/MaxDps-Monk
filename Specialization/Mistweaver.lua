@@ -36,7 +36,7 @@ function Monk:Mistweaver()
         MaxDps:GlowCooldown(classtable.ChiBurst, cooldown[classtable.ChiBurst].ready)
     end
 
-    MaxDps:GlowCooldown(classtable.FaelineStomp, cooldown[classtable.FaelineStomp].ready)
+    MaxDps:GlowCooldown(classtable.JadefireStomp, cooldown[classtable.JadefireStomp].ready)
 
 	if targetHp < health  and cooldown[classtable.TouchofDeath].ready then
         return classtable.TouchofDeath
