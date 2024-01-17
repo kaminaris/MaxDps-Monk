@@ -22,10 +22,10 @@ Monk.spellMeta = {
 function Monk:Enable()
 	if MaxDps.Spec == 1 then
 		MaxDps.NextSpell = Monk.Brewmaster;
-		MaxDps:Print(MaxDps.Colors.Info .. 'Monk Brewmaster');
+		MaxDps:Print(MaxDps.Colors.Info .. 'Monk Brewmaster', "info");
 	elseif MaxDps.Spec == 2 then
 		MaxDps.NextSpell = Monk.Mistweaver;
-		MaxDps:Print(MaxDps.Colors.Info .. 'Monk Mistweaver');
+		MaxDps:Print(MaxDps.Colors.Info .. 'Monk Mistweaver', "info");
 	elseif MaxDps.Spec == 3 then
 		MaxDps.NextSpell = Monk.Windwalker;
 		MaxDps:Print(MaxDps.Colors.Info .. 'Monk Windwalker');
