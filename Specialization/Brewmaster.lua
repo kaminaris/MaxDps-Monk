@@ -65,6 +65,7 @@ local ManaMax
 local ManaDeficit
 local staggerAmount
 local staggerPercent
+local WoOLastUsed
 
 
 local function CheckSpellCosts(spell,spellstring)
@@ -154,7 +155,7 @@ local function rotation_pta()
     if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (targets >2) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (( 1.1 >( timeInCombat - action.melee_main_hand.last_used ) * ( 1 + SpellHaste ) - (twoh_check() == true and 2 or 1) )) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (( 1.1 >( timeInCombat - gcd ) * ( 1 + SpellHaste ) - (twoh_check() == true and 2 or 1) )) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.ExpelHarm) and CheckSpellCosts(classtable.ExpelHarm, 'ExpelHarm')) and cooldown[classtable.ExpelHarm].ready then
@@ -189,7 +190,7 @@ local function rotation_boc()
     if (MaxDps:FindSpell(classtable.WeaponsofOrder) and CheckSpellCosts(classtable.WeaponsofOrder, 'WeaponsofOrder') and talents[classtable.WeaponsofOrder]) and (( talents[classtable.WeaponsofOrder] ) and not talents[classtable.ImprovedInvokeNiuzaotheBlackOx]) and cooldown[classtable.WeaponsofOrder].ready then
         return classtable.WeaponsofOrder
     end
-    if (MaxDps:FindSpell(classtable.KegSmash) and CheckSpellCosts(classtable.KegSmash, 'KegSmash')) and (( timeInCombat - action.weapons_of_order.last_used <2 )) and cooldown[classtable.KegSmash].ready then
+    if (MaxDps:FindSpell(classtable.KegSmash) and CheckSpellCosts(classtable.KegSmash, 'KegSmash')) and (( timeInCombat - WoOLastUsed <2 )) and cooldown[classtable.KegSmash].ready then
         return classtable.KegSmash
     end
     if (MaxDps:FindSpell(classtable.KegSmash) and CheckSpellCosts(classtable.KegSmash, 'KegSmash')) and (( buff[classtable.WeaponsofOrderBuff].remains <gcd * 2 and buff[classtable.WeaponsofOrderBuff].up ) and not talents[classtable.ImprovedInvokeNiuzaotheBlackOx]) and cooldown[classtable.KegSmash].ready then
@@ -294,6 +295,7 @@ function Monk:Brewmaster()
     EnergyTimeToMax = EnergyDeficit / EnergyRegen
     staggerAmount = UnitStagger('player')
     staggerPercent = (staggerAmount / maxHP) * 100
+    WoOLastUsed = 0
     classtable.PresstheAdvantageBuff = 418361
     classtable.BlackoutComboBuff = 228563
     classtable.ExplodingKegBuff = 325153
@@ -303,9 +305,6 @@ function Monk:Brewmaster()
     classtable.InvokeNiuzaotheBlackOxBuff = 132578
     classtable.WeaponsofOrderBuff = 387184
     classtable.WeaponsofOrderDebuffDeBuff = 387179
-
-    MaxDps:GlowCooldown(classtable.TouchofDeath,cooldown[classtable.TouchofDeath].ready and targethealthPerc < 15 and targetHP < maxHP and targetHP > 0)
-
     PreCombatUpdate()
     local item_actionsCheck = item_actions()
     if item_actionsCheck then
