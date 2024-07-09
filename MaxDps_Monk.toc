@@ -6,6 +6,7 @@
 ## LoadOnDemand: 1
 ## X-Curse-Project-ID: 255355
 ## X-WoWI-ID: 24647
+## X-Wago-ID: vNAe5ONo
 
 Main.lua
 Specialization\Brewmaster.lua
