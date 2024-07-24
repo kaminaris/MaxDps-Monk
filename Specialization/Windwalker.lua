@@ -248,7 +248,7 @@ function Windwalker:cd_sef()
     if (MaxDps:FindSpell(classtable.StormEarthandFire) and CheckSpellCosts(classtable.StormEarthandFire, 'StormEarthandFire') and talents[classtable.StormEarthandFire]) and (not talents[classtable.BonedustBrew] and ( ( UnitExists('pet') and UnitName('pet')  == 'xuen' ) or ttd >15 and cooldown[classtable.StormEarthandFire].fullRecharge <cooldown[classtable.InvokeXuentheWhiteTiger].remains )) and cooldown[classtable.StormEarthandFire].ready then
         return classtable.StormEarthandFire
     end
-    if (MaxDps:FindSpell(classtable.BonedustBrew) and CheckSpellCosts(classtable.BonedustBrew, 'BonedustBrew') and talents[classtable.BonedustBrew]) and (( not buff[classtable.BonedustBrewBuff].up and buff[classtable.StormEarthandFireBuff].up and buff[classtable.StormEarthandFireBuff].remains <11 and (targets==5) ) or ( not buff[classtable.BonedustBrewBuff].up and ttd <30 and ttd >10 and (targets==5) and Chi >= 4 ) or ttd <10 or ( not debuff[classtable.SkyreachExhaustionDeBuff].up and targets >= 4 and (GetSpellCount(101546)) >= 2 ) or ( ( UnitExists('pet') and UnitName('pet')  == 'xuen' ) and (targets==5) and targets >= 4 )) and cooldown[classtable.BonedustBrew].ready then
+    if (MaxDps:FindSpell(classtable.BonedustBrew) and CheckSpellCosts(classtable.BonedustBrew, 'BonedustBrew') and talents[classtable.BonedustBrew]) and (( not buff[classtable.BonedustBrewBuff].up and buff[classtable.StormEarthandFireBuff].up and buff[classtable.StormEarthandFireBuff].remains <11 and (targets==5) ) or ( not buff[classtable.BonedustBrewBuff].up and ttd <30 and ttd >10 and (targets==5) and Chi >= 4 ) or ttd <10 or ( not debuff[classtable.SkyreachExhaustionDeBuff].up and targets >= 4 and (C_Spell.GetSpellCastCount(101546)) >= 2 ) or ( ( UnitExists('pet') and UnitName('pet')  == 'xuen' ) and (targets==5) and targets >= 4 )) and cooldown[classtable.BonedustBrew].ready then
         return classtable.BonedustBrew
     end
     if (not buff[classtable.BonedustBrewBuff].up and talents[classtable.BonedustBrew] and cooldown[classtable.BonedustBrew].remains <= 2 and ( ttd >60 and ( cooldown[classtable.StormEarthandFire].charges >0 or cooldown[classtable.StormEarthandFire].remains >10 ) and ( ( UnitExists('pet') and UnitName('pet')  == 'xuen' ) or cooldown[classtable.InvokeXuentheWhiteTiger].remains >10 or hold_xuen ) or ( ( ( UnitExists('pet') and UnitName('pet')  == 'xuen' ) or cooldown[classtable.InvokeXuentheWhiteTiger].remains >13 ) and ( cooldown[classtable.StormEarthandFire].charges >0 or cooldown[classtable.StormEarthandFire].remains >13 or buff[classtable.StormEarthandFireBuff].up ) ) )) then
@@ -375,13 +375,13 @@ function Windwalker:default_2t()
     if (MaxDps:FindSpell(classtable.RisingSunKick) and CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and (not talents[classtable.ShadowboxingTreads] and cooldown[classtable.FistsofFury].remains >4 and talents[classtable.XuensBattlegear]) and cooldown[classtable.RisingSunKick].ready then
         return classtable.RisingSunKick
     end
-    if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick) and cooldown[classtable.RisingSunKick].remains and cooldown[classtable.FistsofFury].remains and ( not buff[classtable.BonedustBrewBuff].up or (GetSpellCount(101546)) <1.5 )) and cooldown[classtable.BlackoutKick].ready then
+    if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick) and cooldown[classtable.RisingSunKick].remains and cooldown[classtable.FistsofFury].remains and ( not buff[classtable.BonedustBrewBuff].up or (C_Spell.GetSpellCastCount(101546)) <1.5 )) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
     if (MaxDps:FindSpell(classtable.RushingJadeWind) and CheckSpellCosts(classtable.RushingJadeWind, 'RushingJadeWind')) and (not buff[classtable.RushingJadeWindBuff].up) and cooldown[classtable.RushingJadeWind].ready then
         return classtable.RushingJadeWind
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and buff[classtable.BonedustBrewBuff].up and IsComboStrike(classtable.SpinningCraneKick) and (GetSpellCount(101546)) >= 2.7) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and buff[classtable.BonedustBrewBuff].up and IsComboStrike(classtable.SpinningCraneKick) and (C_Spell.GetSpellCastCount(101546)) >= 2.7) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.RisingSunKick) and CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and cooldown[classtable.RisingSunKick].ready then
@@ -689,7 +689,7 @@ function Windwalker:default_st()
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (buff[classtable.TeachingsoftheMonasteryBuff].up and cooldown[classtable.RisingSunKick].remains >1) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and buff[classtable.BonedustBrewBuff].up and IsComboStrike(classtable.SpinningCraneKick) and (GetSpellCount(101546)) >= 2.7) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and buff[classtable.BonedustBrewBuff].up and IsComboStrike(classtable.SpinningCraneKick) and (C_Spell.GetSpellCastCount(101546)) >= 2.7) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.WhirlingDragonPunch) and CheckSpellCosts(classtable.WhirlingDragonPunch, 'WhirlingDragonPunch') and talents[classtable.WhirlingDragonPunch]) and cooldown[classtable.WhirlingDragonPunch].ready then
