@@ -5,7 +5,7 @@ if not MaxDps then return end
 
 local UnitPower = UnitPower
 local UnitHealth = UnitHealth
-local UnitAura = UnitAura
+local UnitAura = C_UnitAuras.GetAuraDataByIndex
 local GetSpellDescription = GetSpellDescription
 local GetSpellPowerCost = C_Spell.GetSpellPowerCost
 local UnitHealthMax = UnitHealthMax
@@ -324,7 +324,7 @@ function Windwalker:default_2t()
     if (MaxDps:FindSpell(classtable.StrikeoftheWindlord) and CheckSpellCosts(classtable.StrikeoftheWindlord, 'StrikeoftheWindlord')) and (talents[classtable.Thunderfist] and ( cooldown[classtable.InvokeXuentheWhiteTiger].remains >20 or ttd <5 )) and cooldown[classtable.StrikeoftheWindlord].ready then
         return classtable.StrikeoftheWindlord
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (talents[classtable.ShadowboxingTreads] and IsComboStrike(classtable.BlackoutKick) and buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.BlackoutKick].ready then
@@ -345,7 +345,7 @@ function Windwalker:default_2t()
     if (MaxDps:FindSpell(classtable.RisingSunKick) and CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and (buff[classtable.KicksofFlowingMomentumBuff].up or buff[classtable.PressurePointBuff].up or debuff[classtable.SkyreachExhaustionDeBuff].remains >55) and cooldown[classtable.RisingSunKick].ready then
         return classtable.RisingSunKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.ChiBurst) and CheckSpellCosts(classtable.ChiBurst, 'ChiBurst') and talents[classtable.ChiBurst]) and (MaxDps:Bloodlust() and Chi <5) and cooldown[classtable.ChiBurst].ready then
@@ -381,7 +381,7 @@ function Windwalker:default_2t()
     if (MaxDps:FindSpell(classtable.RushingJadeWind) and CheckSpellCosts(classtable.RushingJadeWind, 'RushingJadeWind')) and (not buff[classtable.RushingJadeWindBuff].up) and cooldown[classtable.RushingJadeWind].ready then
         return classtable.RushingJadeWind
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and buff[classtable.BonedustBrewBuff].up and IsComboStrike(classtable.SpinningCraneKick) and (GetSpellCount(101546)) >= 2.7) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and buff[classtable.BonedustBrewBuff].up and IsComboStrike(classtable.SpinningCraneKick) and (GetSpellCount(101546)) >= 2.7) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.RisingSunKick) and CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and cooldown[classtable.RisingSunKick].ready then
@@ -398,7 +398,7 @@ function Windwalker:default_3t()
     if (MaxDps:FindSpell(classtable.TigerPalm) and CheckSpellCosts(classtable.TigerPalm, 'TigerPalm')) and (IsComboStrike(classtable.TigerPalm) and Chi <2 and ( cooldown[classtable.RisingSunKick].remains <1 or cooldown[classtable.FistsofFury].remains <1 or cooldown[classtable.StrikeoftheWindlord].remains <1 ) and buff[classtable.TeachingsoftheMonasteryBuff].count <3) and cooldown[classtable.TigerPalm].ready then
         return classtable.TigerPalm
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.StrikeoftheWindlord) and CheckSpellCosts(classtable.StrikeoftheWindlord, 'StrikeoftheWindlord')) and (talents[classtable.Thunderfist] and (MaxDps.tier and MaxDps.tier[31].count >= 4)) and cooldown[classtable.StrikeoftheWindlord].ready then
@@ -419,7 +419,7 @@ function Windwalker:default_3t()
     if (MaxDps:FindSpell(classtable.RisingSunKick) and CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and (buff[classtable.BonedustBrewBuff].up and buff[classtable.PressurePointBuff].up and (MaxDps.tier and MaxDps.tier[30].count >= 2)) and cooldown[classtable.RisingSunKick].ready then
         return classtable.RisingSunKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and buff[classtable.BonedustBrewBuff].up and IsComboStrike(classtable.SpinningCraneKick)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and buff[classtable.BonedustBrewBuff].up and IsComboStrike(classtable.SpinningCraneKick)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.RisingSunKick) and CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and (not buff[classtable.BonedustBrewBuff].up and buff[classtable.PressurePointBuff].up) and cooldown[classtable.RisingSunKick].ready then
@@ -452,13 +452,13 @@ function Windwalker:default_3t()
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (buff[classtable.TeachingsoftheMonasteryBuff].count == 3) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and cooldown[classtable.FistsofFury].remains <3 and buff[classtable.ChiEnergyBuff].count >15) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and cooldown[classtable.FistsofFury].remains <3 and buff[classtable.ChiEnergyBuff].count >15) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.RisingSunKick) and CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and (cooldown[classtable.FistsofFury].remains >4 and Chi >3) and cooldown[classtable.RisingSunKick].ready then
         return classtable.RisingSunKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and cooldown[classtable.RisingSunKick].remains and cooldown[classtable.FistsofFury].remains and Chi >4 and ( ( talents[classtable.StormEarthandFire] and not talents[classtable.BonedustBrew] ) or ( talents[classtable.Serenity] ) )) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and cooldown[classtable.RisingSunKick].remains and cooldown[classtable.FistsofFury].remains and Chi >4 and ( ( talents[classtable.StormEarthandFire] and not talents[classtable.BonedustBrew] ) or ( talents[classtable.Serenity] ) )) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick) and cooldown[classtable.FistsofFury].remains) and cooldown[classtable.BlackoutKick].ready then
@@ -470,7 +470,7 @@ function Windwalker:default_3t()
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick) and talents[classtable.ShadowboxingTreads] and not (targets==5)) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and ( IsComboStrike(classtable.SpinningCraneKick) and Chi >5 and talents[classtable.StormEarthandFire] or IsComboStrike(classtable.SpinningCraneKick) and Chi >4 and talents[classtable.Serenity] )) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and ( IsComboStrike(classtable.SpinningCraneKick) and Chi >5 and talents[classtable.StormEarthandFire] or IsComboStrike(classtable.SpinningCraneKick) and Chi >4 and talents[classtable.Serenity] )) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
 end
@@ -478,7 +478,7 @@ function Windwalker:default_4t()
     if (MaxDps:FindSpell(classtable.TigerPalm) and CheckSpellCosts(classtable.TigerPalm, 'TigerPalm')) and (IsComboStrike(classtable.TigerPalm) and Chi <2 and ( cooldown[classtable.FistsofFury].remains <1 or cooldown[classtable.StrikeoftheWindlord].remains <1 ) and buff[classtable.TeachingsoftheMonasteryBuff].count <3) and cooldown[classtable.TigerPalm].ready then
         return classtable.TigerPalm
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and (targets==5) and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and (targets==5) and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.StrikeoftheWindlord) and CheckSpellCosts(classtable.StrikeoftheWindlord, 'StrikeoftheWindlord')) and (talents[classtable.Thunderfist]) and cooldown[classtable.StrikeoftheWindlord].ready then
@@ -493,7 +493,7 @@ function Windwalker:default_4t()
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (talents[classtable.ShadowboxingTreads] and IsComboStrike(classtable.BlackoutKick) and buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and buff[classtable.BonedustBrewBuff].up and IsComboStrike(classtable.SpinningCraneKick) and (targets==5)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and buff[classtable.BonedustBrewBuff].up and IsComboStrike(classtable.SpinningCraneKick) and (targets==5)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.WhirlingDragonPunch) and CheckSpellCosts(classtable.WhirlingDragonPunch, 'WhirlingDragonPunch') and talents[classtable.WhirlingDragonPunch]) and cooldown[classtable.WhirlingDragonPunch].ready then
@@ -514,7 +514,7 @@ function Windwalker:default_4t()
     if (MaxDps:FindSpell(classtable.ExpelHarm) and CheckSpellCosts(classtable.ExpelHarm, 'ExpelHarm')) and (Chi == 1 and ( not cooldown[classtable.RisingSunKick].remains or not cooldown[classtable.StrikeoftheWindlord].remains ) or Chi == 2 and not cooldown[classtable.FistsofFury].remains) and cooldown[classtable.ExpelHarm].ready then
         return classtable.ExpelHarm
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and cooldown[classtable.FistsofFury].remains >3 and buff[classtable.ChiEnergyBuff].count >10) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and cooldown[classtable.FistsofFury].remains >3 and buff[classtable.ChiEnergyBuff].count >10) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick) and (MaxDps.tier and MaxDps.tier[30].count >= 2)) and cooldown[classtable.BlackoutKick].ready then
@@ -526,7 +526,7 @@ function Windwalker:default_4t()
     if (MaxDps:FindSpell(classtable.ChiBurst) and CheckSpellCosts(classtable.ChiBurst, 'ChiBurst') and talents[classtable.ChiBurst]) and (Chi <5 and Energy <50) and cooldown[classtable.ChiBurst].ready then
         return classtable.ChiBurst
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and ( cooldown[classtable.FistsofFury].remains >3 or Chi >4 ) and (targets==5)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and ( cooldown[classtable.FistsofFury].remains >3 or Chi >4 ) and (targets==5)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (buff[classtable.TeachingsoftheMonasteryBuff].count == 3) and cooldown[classtable.BlackoutKick].ready then
@@ -535,7 +535,7 @@ function Windwalker:default_4t()
     if (MaxDps:FindSpell(classtable.StrikeoftheWindlord) and CheckSpellCosts(classtable.StrikeoftheWindlord, 'StrikeoftheWindlord')) and cooldown[classtable.StrikeoftheWindlord].ready then
         return classtable.StrikeoftheWindlord
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and ( cooldown[classtable.FistsofFury].remains >3 or Chi >4 )) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and ( cooldown[classtable.FistsofFury].remains >3 or Chi >4 )) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick)) and cooldown[classtable.BlackoutKick].ready then
@@ -543,10 +543,10 @@ function Windwalker:default_4t()
     end
 end
 function Windwalker:default_aoe()
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and (targets==5) and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and (targets==5) and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and not talents[classtable.HitCombo] and (targets==5) and buff[classtable.BonedustBrewBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and not talents[classtable.HitCombo] and (targets==5) and buff[classtable.BonedustBrewBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.StrikeoftheWindlord) and CheckSpellCosts(classtable.StrikeoftheWindlord, 'StrikeoftheWindlord')) and (talents[classtable.Thunderfist]) and cooldown[classtable.StrikeoftheWindlord].ready then
@@ -555,7 +555,7 @@ function Windwalker:default_aoe()
     if (MaxDps:FindSpell(classtable.WhirlingDragonPunch) and CheckSpellCosts(classtable.WhirlingDragonPunch, 'WhirlingDragonPunch') and talents[classtable.WhirlingDragonPunch]) and (targets >8) and cooldown[classtable.WhirlingDragonPunch].ready then
         return classtable.WhirlingDragonPunch
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and buff[classtable.BonedustBrewBuff].up and IsComboStrike(classtable.SpinningCraneKick) and (targets==5)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and buff[classtable.BonedustBrewBuff].up and IsComboStrike(classtable.SpinningCraneKick) and (targets==5)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.FistsofFury) and CheckSpellCosts(classtable.FistsofFury, 'FistsofFury')) and cooldown[classtable.FistsofFury].ready then
@@ -588,7 +588,7 @@ function Windwalker:default_aoe()
     if (MaxDps:FindSpell(classtable.ExpelHarm) and CheckSpellCosts(classtable.ExpelHarm, 'ExpelHarm')) and (Chi == 1 and ( not cooldown[classtable.RisingSunKick].remains or not cooldown[classtable.StrikeoftheWindlord].remains ) or Chi == 2 and not cooldown[classtable.FistsofFury].remains) and cooldown[classtable.ExpelHarm].ready then
         return classtable.ExpelHarm
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and cooldown[classtable.FistsofFury].remains <5 and buff[classtable.ChiEnergyBuff].count >10) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and cooldown[classtable.FistsofFury].remains <5 and buff[classtable.ChiEnergyBuff].count >10) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.ChiBurst) and CheckSpellCosts(classtable.ChiBurst, 'ChiBurst') and talents[classtable.ChiBurst]) and (MaxDps:Bloodlust() and Chi <5) and cooldown[classtable.ChiBurst].ready then
@@ -597,10 +597,10 @@ function Windwalker:default_aoe()
     if (MaxDps:FindSpell(classtable.ChiBurst) and CheckSpellCosts(classtable.ChiBurst, 'ChiBurst') and talents[classtable.ChiBurst]) and (Chi <5 and Energy <50) and cooldown[classtable.ChiBurst].ready then
         return classtable.ChiBurst
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and ( cooldown[classtable.FistsofFury].remains >3 or Chi >2 ) and (targets==5) and MaxDps:Bloodlust() and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and ( cooldown[classtable.FistsofFury].remains >3 or Chi >2 ) and (targets==5) and MaxDps:Bloodlust() and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and ( cooldown[classtable.FistsofFury].remains >3 or Chi >2 ) and (targets==5) and buff[classtable.InvokersDelightBuff].up and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and ( cooldown[classtable.FistsofFury].remains >3 or Chi >2 ) and (targets==5) and buff[classtable.InvokersDelightBuff].up and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (talents[classtable.ShadowboxingTreads] and IsComboStrike(classtable.BlackoutKick) and (MaxDps.tier and MaxDps.tier[30].count >= 2) and not buff[classtable.BonedustBrewBuff].up and targets <15 and not talents[classtable.CraneVortex]) and cooldown[classtable.BlackoutKick].ready then
@@ -609,7 +609,7 @@ function Windwalker:default_aoe()
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (talents[classtable.ShadowboxingTreads] and IsComboStrike(classtable.BlackoutKick) and (MaxDps.tier and MaxDps.tier[30].count >= 2) and not buff[classtable.BonedustBrewBuff].up and targets <8) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and ( cooldown[classtable.FistsofFury].remains >3 or Chi >4 ) and (targets==5)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and ( cooldown[classtable.FistsofFury].remains >3 or Chi >4 ) and (targets==5)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (buff[classtable.TeachingsoftheMonasteryBuff].count == 3) and cooldown[classtable.BlackoutKick].ready then
@@ -635,7 +635,7 @@ function Windwalker:default_st()
     if (MaxDps:FindSpell(classtable.StrikeoftheWindlord) and CheckSpellCosts(classtable.StrikeoftheWindlord, 'StrikeoftheWindlord')) and (buff[classtable.DomineeringArroganceBuff].up and talents[classtable.Thunderfist] and talents[classtable.Serenity] and cooldown[classtable.InvokeXuentheWhiteTiger].remains >20 or ttd <5 or talents[classtable.Thunderfist] and debuff[classtable.SkyreachExhaustionDeBuff].remains >10 and not buff[classtable.DomineeringArroganceBuff].up or talents[classtable.Thunderfist] and debuff[classtable.SkyreachExhaustionDeBuff].remains >35 and not talents[classtable.Serenity]) and cooldown[classtable.StrikeoftheWindlord].ready then
         return classtable.StrikeoftheWindlord
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2) and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2) and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.RisingSunKick) and CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and (not cooldown[classtable.FistsofFury].remains) and cooldown[classtable.RisingSunKick].ready then
@@ -683,13 +683,13 @@ function Windwalker:default_st()
     if (MaxDps:FindSpell(classtable.StrikeoftheWindlord) and CheckSpellCosts(classtable.StrikeoftheWindlord, 'StrikeoftheWindlord')) and (debuff[classtable.SkyreachExhaustionDeBuff].remains >30 or ttd <5) and cooldown[classtable.StrikeoftheWindlord].ready then
         return classtable.StrikeoftheWindlord
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and not (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and not (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (buff[classtable.TeachingsoftheMonasteryBuff].up and cooldown[classtable.RisingSunKick].remains >1) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and buff[classtable.BonedustBrewBuff].up and IsComboStrike(classtable.SpinningCraneKick) and (GetSpellCount(101546)) >= 2.7) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and buff[classtable.BonedustBrewBuff].up and IsComboStrike(classtable.SpinningCraneKick) and (GetSpellCount(101546)) >= 2.7) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.WhirlingDragonPunch) and CheckSpellCosts(classtable.WhirlingDragonPunch, 'WhirlingDragonPunch') and talents[classtable.WhirlingDragonPunch]) and cooldown[classtable.WhirlingDragonPunch].ready then
@@ -727,7 +727,7 @@ function Windwalker:fallthru()
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick) and targets >= 5) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.ChiEnergyBuff].count >30 - 5 * targets and not buff[classtable.StormEarthandFireBuff].up and ( cooldown[classtable.RisingSunKick].remains >2 and cooldown[classtable.FistsofFury].remains >2 or cooldown[classtable.RisingSunKick].remains <3 and cooldown[classtable.FistsofFury].remains >3 and Chi >3 or cooldown[classtable.RisingSunKick].remains >3 and cooldown[classtable.FistsofFury].remains <3 and Chi >4 or ChiMax - Chi <= 1 and EnergyTimeToMax <2 ) or buff[classtable.ChiEnergyBuff].count >10 and ttd <7) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.ChiEnergyBuff].count >30 - 5 * targets and not buff[classtable.StormEarthandFireBuff].up and ( cooldown[classtable.RisingSunKick].remains >2 and cooldown[classtable.FistsofFury].remains >2 or cooldown[classtable.RisingSunKick].remains <3 and cooldown[classtable.FistsofFury].remains >3 and Chi >3 or cooldown[classtable.RisingSunKick].remains >3 and cooldown[classtable.FistsofFury].remains <3 and Chi >4 or ChiMax - Chi <= 1 and EnergyTimeToMax <2 ) or buff[classtable.ChiEnergyBuff].count >10 and ttd <7) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     --if (MaxDps:FindSpell(classtable.FlyingSerpentKick) and CheckSpellCosts(classtable.FlyingSerpentKick, 'FlyingSerpentKick')) and cooldown[classtable.FlyingSerpentKick].ready then
@@ -770,7 +770,7 @@ function Windwalker:serenity_2t()
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick) and buff[classtable.TeachingsoftheMonasteryBuff].count == 3 and buff[classtable.TeachingsoftheMonasteryBuff].remains <1) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up and CheckPrevSpell(classtable.FistsofFury) and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up and CheckPrevSpell(classtable.FistsofFury) and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.RisingSunKick) and CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and (buff[classtable.PressurePointBuff].up or debuff[classtable.SkyreachExhaustionDeBuff].remains >55) and cooldown[classtable.RisingSunKick].ready then
@@ -791,7 +791,7 @@ function Windwalker:serenity_2t()
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick) and buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.FistsofFury) and CheckSpellCosts(classtable.FistsofFury, 'FistsofFury')) and (buff[classtable.InvokersDelightBuff].up) and cooldown[classtable.FistsofFury].ready then
@@ -803,10 +803,10 @@ function Windwalker:serenity_2t()
     if (MaxDps:FindSpell(classtable.StrikeoftheWindlord) and CheckSpellCosts(classtable.StrikeoftheWindlord, 'StrikeoftheWindlord')) and (talents[classtable.Thunderfist]) and cooldown[classtable.StrikeoftheWindlord].ready then
         return classtable.StrikeoftheWindlord
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick) and (MaxDps.tier and MaxDps.tier[30].count >= 2)) and cooldown[classtable.BlackoutKick].ready then
@@ -838,7 +838,7 @@ function Windwalker:serenity_3t()
     if (MaxDps:FindSpell(classtable.TigerPalm) and CheckSpellCosts(classtable.TigerPalm, 'TigerPalm')) and (not debuff[classtable.SkyreachExhaustionDeBuff].up and IsComboStrike(classtable.TigerPalm)) and cooldown[classtable.TigerPalm].ready then
         return classtable.TigerPalm
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and (targets==5) and not buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and (targets==5) and not buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.StrikeoftheWindlord) and CheckSpellCosts(classtable.StrikeoftheWindlord, 'StrikeoftheWindlord')) and (talents[classtable.Thunderfist] and buff[classtable.CallToDominanceBuff].up and debuff[classtable.SkyreachExhaustionDeBuff].remains >buff[classtable.CallToDominanceBuff].remains) and cooldown[classtable.StrikeoftheWindlord].ready then
@@ -856,10 +856,10 @@ function Windwalker:serenity_3t()
     if (MaxDps:FindSpell(classtable.FistsofFuryCancel) and CheckSpellCosts(classtable.FistsofFuryCancel, 'FistsofFuryCancel')) and (not (MaxDps.tier and MaxDps.tier[31].count >= 2) or buff[classtable.FuryofXuenStacksBuff].count >90) and cooldown[classtable.FistsofFuryCancel].ready then
         return classtable.FistsofFuryCancel
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and (targets==5) and not buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and (targets==5) and not buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and (targets==5) and buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2) and CheckPrevSpell(classtable.BlackoutKick) and talents[classtable.CraneVortex]) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and (targets==5) and buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2) and CheckPrevSpell(classtable.BlackoutKick) and talents[classtable.CraneVortex]) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick) and not buff[classtable.PressurePointBuff].up) and cooldown[classtable.BlackoutKick].ready then
@@ -880,13 +880,13 @@ function Windwalker:serenity_3t()
     if (MaxDps:FindSpell(classtable.StrikeoftheWindlord) and CheckSpellCosts(classtable.StrikeoftheWindlord, 'StrikeoftheWindlord')) and (talents[classtable.Thunderfist]) and cooldown[classtable.StrikeoftheWindlord].ready then
         return classtable.StrikeoftheWindlord
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and (targets==5) and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and (targets==5) and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick) and (MaxDps.tier and MaxDps.tier[30].count >= 2)) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick) and buff[classtable.TeachingsoftheMonasteryBuff].count == 2) and cooldown[classtable.BlackoutKick].ready then
@@ -898,7 +898,7 @@ function Windwalker:serenity_3t()
     if (MaxDps:FindSpell(classtable.StrikeoftheWindlord) and CheckSpellCosts(classtable.StrikeoftheWindlord, 'StrikeoftheWindlord')) and cooldown[classtable.StrikeoftheWindlord].ready then
         return classtable.StrikeoftheWindlord
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.WhirlingDragonPunch) and CheckSpellCosts(classtable.WhirlingDragonPunch, 'WhirlingDragonPunch') and talents[classtable.WhirlingDragonPunch]) and cooldown[classtable.WhirlingDragonPunch].ready then
@@ -918,19 +918,19 @@ function Windwalker:serenity_4t()
     if (MaxDps:FindSpell(classtable.JadefireStomp) and CheckSpellCosts(classtable.JadefireStomp, 'JadefireStomp') and talents[classtable.JadefireStomp]) and (debuff[classtable.JadefireBrandDamageDeBuff].remains <1) and cooldown[classtable.JadefireStomp].ready then
         return classtable.JadefireStomp
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and buff[classtable.SerenityBuff].remains <1.5 and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and buff[classtable.SerenityBuff].remains <1.5 and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.StrikeoftheWindlord) and CheckSpellCosts(classtable.StrikeoftheWindlord, 'StrikeoftheWindlord')) and ((MaxDps.tier and MaxDps.tier[31].count >= 4) and talents[classtable.Thunderfist]) and cooldown[classtable.StrikeoftheWindlord].ready then
         return classtable.StrikeoftheWindlord
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.FistsofFuryCancel) and CheckSpellCosts(classtable.FistsofFuryCancel, 'FistsofFuryCancel')) and (not (MaxDps.tier and MaxDps.tier[30].count >= 2) and buff[classtable.FuryofXuenStacksBuff].count >90) and cooldown[classtable.FistsofFuryCancel].ready then
         return classtable.FistsofFuryCancel
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2) and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2) and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick) and buff[classtable.TeachingsoftheMonasteryBuff].count == 3 and buff[classtable.TeachingsoftheMonasteryBuff].remains <1) and cooldown[classtable.BlackoutKick].ready then
@@ -939,7 +939,7 @@ function Windwalker:serenity_4t()
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and ((MaxDps.tier and MaxDps.tier[31].count >= 2) and IsComboStrike(classtable.BlackoutKick) and buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and (MaxDps.tier and MaxDps.tier[31].count >= 2) and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up and talents[classtable.CraneVortex]) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and (MaxDps.tier and MaxDps.tier[31].count >= 2) and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up and talents[classtable.CraneVortex]) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.RisingSunKick) and CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and (buff[classtable.PressurePointBuff].up and not talents[classtable.BonedustBrew]) and cooldown[classtable.RisingSunKick].ready then
@@ -954,7 +954,7 @@ function Windwalker:serenity_4t()
     if (MaxDps:FindSpell(classtable.RisingSunKick) and CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and ((MaxDps.tier and MaxDps.tier[30].count >= 2)) and cooldown[classtable.RisingSunKick].ready then
         return classtable.RisingSunKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and (MaxDps.tier and MaxDps.tier[31].count >= 2) and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and (MaxDps.tier and MaxDps.tier[31].count >= 2) and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.StrikeoftheWindlord) and CheckSpellCosts(classtable.StrikeoftheWindlord, 'StrikeoftheWindlord')) and (talents[classtable.Thunderfist] and buff[classtable.CallToDominanceBuff].up and debuff[classtable.SkyreachExhaustionDeBuff].remains >buff[classtable.CallToDominanceBuff].remains) and cooldown[classtable.StrikeoftheWindlord].ready then
@@ -972,7 +972,7 @@ function Windwalker:serenity_4t()
     if (MaxDps:FindSpell(classtable.StrikeoftheWindlord) and CheckSpellCosts(classtable.StrikeoftheWindlord, 'StrikeoftheWindlord')) and (talents[classtable.Thunderfist]) and cooldown[classtable.StrikeoftheWindlord].ready then
         return classtable.StrikeoftheWindlord
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.RisingSunKick) and CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and (buff[classtable.PressurePointBuff].up) and cooldown[classtable.RisingSunKick].ready then
@@ -981,7 +981,7 @@ function Windwalker:serenity_4t()
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick) and (MaxDps.tier and MaxDps.tier[30].count >= 2)) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and (targets==5)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and (targets==5)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (talents[classtable.ShadowboxingTreads] and IsComboStrike(classtable.BlackoutKick)) and cooldown[classtable.BlackoutKick].ready then
@@ -990,7 +990,7 @@ function Windwalker:serenity_4t()
     if (MaxDps:FindSpell(classtable.StrikeoftheWindlord) and CheckSpellCosts(classtable.StrikeoftheWindlord, 'StrikeoftheWindlord')) and cooldown[classtable.StrikeoftheWindlord].ready then
         return classtable.StrikeoftheWindlord
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.WhirlingDragonPunch) and CheckSpellCosts(classtable.WhirlingDragonPunch, 'WhirlingDragonPunch') and talents[classtable.WhirlingDragonPunch]) and cooldown[classtable.WhirlingDragonPunch].ready then
@@ -1013,16 +1013,16 @@ function Windwalker:serenity_aoe()
     if (MaxDps:FindSpell(classtable.StrikeoftheWindlord) and CheckSpellCosts(classtable.StrikeoftheWindlord, 'StrikeoftheWindlord')) and ((MaxDps.tier and MaxDps.tier[31].count >= 4) and talents[classtable.Thunderfist]) and cooldown[classtable.StrikeoftheWindlord].ready then
         return classtable.StrikeoftheWindlord
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2) and buff[classtable.BonedustBrewBuff].up and targets >4) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2) and buff[classtable.BonedustBrewBuff].up and targets >4) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.FistsofFury) and CheckSpellCosts(classtable.FistsofFury, 'FistsofFury')) and (talents[classtable.JadeIgnition]) and cooldown[classtable.FistsofFury].ready then
         return classtable.FistsofFury
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and (MaxDps.tier and MaxDps.tier[31].count >= 2) and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and (MaxDps.tier and MaxDps.tier[31].count >= 2) and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.FistsofFury) and CheckSpellCosts(classtable.FistsofFury, 'FistsofFury')) and (buff[classtable.InvokersDelightBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2) and ( not buff[classtable.BonedustBrewBuff].up or targets >10 ) and ( buff[classtable.TransferthePowerBuff].count == 10 and not talents[classtable.CraneVortex] or targets >5 and talents[classtable.CraneVortex] and buff[classtable.TransferthePowerBuff].count == 10 or targets >14 or targets >12 and not talents[classtable.CraneVortex] )) and cooldown[classtable.FistsofFury].ready then
@@ -1037,16 +1037,16 @@ function Windwalker:serenity_aoe()
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick) and buff[classtable.TeachingsoftheMonasteryBuff].count == 3 and buff[classtable.TeachingsoftheMonasteryBuff].remains <1) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and (MaxDps.tier and MaxDps.tier[31].count >= 2) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.BlackoutReinforcementBuff].up and CheckPrevSpell(classtable.BlackoutKick) and buff[classtable.DanceofChijiBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and (MaxDps.tier and MaxDps.tier[31].count >= 2) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.BlackoutReinforcementBuff].up and CheckPrevSpell(classtable.BlackoutKick) and buff[classtable.DanceofChijiBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and ((MaxDps.tier and MaxDps.tier[31].count >= 2) and IsComboStrike(classtable.BlackoutKick) and buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and (MaxDps.tier and MaxDps.tier[31].count >= 2) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.BlackoutReinforcementBuff].up and CheckPrevSpell(classtable.BlackoutKick)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and (MaxDps.tier and MaxDps.tier[31].count >= 2) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.BlackoutReinforcementBuff].up and CheckPrevSpell(classtable.BlackoutKick)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.RisingSunKick) and CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and (buff[classtable.PressurePointBuff].up and (MaxDps.tier and MaxDps.tier[30].count >= 2)) and cooldown[classtable.RisingSunKick].ready then
@@ -1070,13 +1070,13 @@ function Windwalker:serenity_aoe()
     if (MaxDps:FindSpell(classtable.StrikeoftheWindlord) and CheckSpellCosts(classtable.StrikeoftheWindlord, 'StrikeoftheWindlord')) and (talents[classtable.Thunderfist]) and cooldown[classtable.StrikeoftheWindlord].ready then
         return classtable.StrikeoftheWindlord
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (targets <6 and IsComboStrike(classtable.BlackoutKick) and (MaxDps.tier and MaxDps.tier[30].count >= 2)) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and (targets==5)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and (targets==5)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.TigerPalm) and CheckSpellCosts(classtable.TigerPalm, 'TigerPalm')) and (not debuff[classtable.SkyreachExhaustionDeBuff].up and IsComboStrike(classtable.TigerPalm) and targets == 5) and cooldown[classtable.TigerPalm].ready then
@@ -1091,7 +1091,7 @@ function Windwalker:serenity_aoe()
     if (MaxDps:FindSpell(classtable.StrikeoftheWindlord) and CheckSpellCosts(classtable.StrikeoftheWindlord, 'StrikeoftheWindlord')) and cooldown[classtable.StrikeoftheWindlord].ready then
         return classtable.StrikeoftheWindlord
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.WhirlingDragonPunch) and CheckSpellCosts(classtable.WhirlingDragonPunch, 'WhirlingDragonPunch') and talents[classtable.WhirlingDragonPunch]) and cooldown[classtable.WhirlingDragonPunch].ready then
@@ -1112,16 +1112,16 @@ function Windwalker:serenity_aoe()
     if (MaxDps:FindSpell(classtable.StrikeoftheWindlord) and CheckSpellCosts(classtable.StrikeoftheWindlord, 'StrikeoftheWindlord')) and ((MaxDps.tier and MaxDps.tier[31].count >= 4) and talents[classtable.Thunderfist]) and cooldown[classtable.StrikeoftheWindlord].ready then
         return classtable.StrikeoftheWindlord
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.FistsofFury) and CheckSpellCosts(classtable.FistsofFury, 'FistsofFury')) and (talents[classtable.JadeIgnition]) and cooldown[classtable.FistsofFury].ready then
         return classtable.FistsofFury
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2) and buff[classtable.BonedustBrewBuff].up and targets >4) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2) and buff[classtable.BonedustBrewBuff].up and targets >4) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and (MaxDps.tier and MaxDps.tier[31].count >= 2) and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and (MaxDps.tier and MaxDps.tier[31].count >= 2) and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.FistsofFury) and CheckSpellCosts(classtable.FistsofFury, 'FistsofFury')) and (buff[classtable.InvokersDelightBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2) and ( targets >5 and buff[classtable.TransferthePowerBuff].count >5 or targets >6 or targets >4 and not talents[classtable.CraneVortex] and buff[classtable.TransferthePowerBuff].count >5 )) and cooldown[classtable.FistsofFury].ready then
@@ -1136,16 +1136,16 @@ function Windwalker:serenity_aoe()
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick) and buff[classtable.TeachingsoftheMonasteryBuff].count == 3 and buff[classtable.TeachingsoftheMonasteryBuff].remains <1) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and (MaxDps.tier and MaxDps.tier[31].count >= 2) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.BlackoutReinforcementBuff].up and CheckPrevSpell(classtable.BlackoutKick) and buff[classtable.DanceofChijiBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and (MaxDps.tier and MaxDps.tier[31].count >= 2) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.BlackoutReinforcementBuff].up and CheckPrevSpell(classtable.BlackoutKick) and buff[classtable.DanceofChijiBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and ((MaxDps.tier and MaxDps.tier[31].count >= 2) and IsComboStrike(classtable.BlackoutKick) and buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and (MaxDps.tier and MaxDps.tier[31].count >= 2) and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and (MaxDps.tier and MaxDps.tier[31].count >= 2) and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (targets <6 and IsComboStrike(classtable.BlackoutKick) and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.BlackoutKick].ready then
@@ -1172,13 +1172,13 @@ function Windwalker:serenity_aoe()
     if (MaxDps:FindSpell(classtable.FistsofFuryCancel) and CheckSpellCosts(classtable.FistsofFuryCancel, 'FistsofFuryCancel')) and cooldown[classtable.FistsofFuryCancel].ready then
         return classtable.FistsofFuryCancel
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (targets <6 and IsComboStrike(classtable.BlackoutKick) and (MaxDps.tier and MaxDps.tier[30].count >= 2)) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and (targets==5)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and (targets==5)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.TigerPalm) and CheckSpellCosts(classtable.TigerPalm, 'TigerPalm')) and (not debuff[classtable.SkyreachExhaustionDeBuff].up and IsComboStrike(classtable.TigerPalm) and targets == 5) and cooldown[classtable.TigerPalm].ready then
@@ -1193,7 +1193,7 @@ function Windwalker:serenity_aoe()
     if (MaxDps:FindSpell(classtable.StrikeoftheWindlord) and CheckSpellCosts(classtable.StrikeoftheWindlord, 'StrikeoftheWindlord')) and cooldown[classtable.StrikeoftheWindlord].ready then
         return classtable.StrikeoftheWindlord
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.WhirlingDragonPunch) and CheckSpellCosts(classtable.WhirlingDragonPunch, 'WhirlingDragonPunch') and talents[classtable.WhirlingDragonPunch]) and cooldown[classtable.WhirlingDragonPunch].ready then
@@ -1216,16 +1216,16 @@ function Windwalker:serenity_aoelust()
     if (MaxDps:FindSpell(classtable.StrikeoftheWindlord) and CheckSpellCosts(classtable.StrikeoftheWindlord, 'StrikeoftheWindlord')) and ((MaxDps.tier and MaxDps.tier[31].count >= 4) and talents[classtable.Thunderfist]) and cooldown[classtable.StrikeoftheWindlord].ready then
         return classtable.StrikeoftheWindlord
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.FistsofFury) and CheckSpellCosts(classtable.FistsofFury, 'FistsofFury')) and (talents[classtable.JadeIgnition]) and cooldown[classtable.FistsofFury].ready then
         return classtable.FistsofFury
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2) and buff[classtable.BonedustBrewBuff].up and targets >4) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2) and buff[classtable.BonedustBrewBuff].up and targets >4) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and (MaxDps.tier and MaxDps.tier[31].count >= 2) and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and (MaxDps.tier and MaxDps.tier[31].count >= 2) and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.FistsofFury) and CheckSpellCosts(classtable.FistsofFury, 'FistsofFury')) and (buff[classtable.InvokersDelightBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2) and ( targets >5 and buff[classtable.TransferthePowerBuff].count >5 or targets >6 or targets >4 and not talents[classtable.CraneVortex] and buff[classtable.TransferthePowerBuff].count >5 )) and cooldown[classtable.FistsofFury].ready then
@@ -1240,16 +1240,16 @@ function Windwalker:serenity_aoelust()
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick) and buff[classtable.TeachingsoftheMonasteryBuff].count == 3 and buff[classtable.TeachingsoftheMonasteryBuff].remains <1) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and (MaxDps.tier and MaxDps.tier[31].count >= 2) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.BlackoutReinforcementBuff].up and CheckPrevSpell(classtable.BlackoutKick) and buff[classtable.DanceofChijiBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and (MaxDps.tier and MaxDps.tier[31].count >= 2) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.BlackoutReinforcementBuff].up and CheckPrevSpell(classtable.BlackoutKick) and buff[classtable.DanceofChijiBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and ((MaxDps.tier and MaxDps.tier[31].count >= 2) and IsComboStrike(classtable.BlackoutKick) and buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and (MaxDps.tier and MaxDps.tier[31].count >= 2) and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and (MaxDps.tier and MaxDps.tier[31].count >= 2) and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (targets <6 and IsComboStrike(classtable.BlackoutKick) and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.BlackoutKick].ready then
@@ -1276,13 +1276,13 @@ function Windwalker:serenity_aoelust()
     if (MaxDps:FindSpell(classtable.FistsofFuryCancel) and CheckSpellCosts(classtable.FistsofFuryCancel, 'FistsofFuryCancel')) and cooldown[classtable.FistsofFuryCancel].ready then
         return classtable.FistsofFuryCancel
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (targets <6 and IsComboStrike(classtable.BlackoutKick) and (MaxDps.tier and MaxDps.tier[30].count >= 2)) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and (targets==5)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and (targets==5)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.TigerPalm) and CheckSpellCosts(classtable.TigerPalm, 'TigerPalm')) and (not debuff[classtable.SkyreachExhaustionDeBuff].up and IsComboStrike(classtable.TigerPalm) and targets == 5) and cooldown[classtable.TigerPalm].ready then
@@ -1297,7 +1297,7 @@ function Windwalker:serenity_aoelust()
     if (MaxDps:FindSpell(classtable.StrikeoftheWindlord) and CheckSpellCosts(classtable.StrikeoftheWindlord, 'StrikeoftheWindlord')) and cooldown[classtable.StrikeoftheWindlord].ready then
         return classtable.StrikeoftheWindlord
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.WhirlingDragonPunch) and CheckSpellCosts(classtable.WhirlingDragonPunch, 'WhirlingDragonPunch') and talents[classtable.WhirlingDragonPunch]) and cooldown[classtable.WhirlingDragonPunch].ready then
@@ -1317,13 +1317,13 @@ function Windwalker:serenity_lust()
     if (MaxDps:FindSpell(classtable.JadefireStomp) and CheckSpellCosts(classtable.JadefireStomp, 'JadefireStomp') and talents[classtable.JadefireStomp]) and (debuff[classtable.JadefireBrandDamageDeBuff].remains <1) and cooldown[classtable.JadefireStomp].ready then
         return classtable.JadefireStomp
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and buff[classtable.SerenityBuff].remains <1.5 and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and buff[classtable.SerenityBuff].remains <1.5 and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick) and buff[classtable.TeachingsoftheMonasteryBuff].count == 3 and buff[classtable.TeachingsoftheMonasteryBuff].remains <1) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2) and targets >2) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2) and targets >2) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.StrikeoftheWindlord) and CheckSpellCosts(classtable.StrikeoftheWindlord, 'StrikeoftheWindlord')) and (talents[classtable.Thunderfist]) and cooldown[classtable.StrikeoftheWindlord].ready then
@@ -1338,34 +1338,34 @@ function Windwalker:serenity_lust()
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick) and buff[classtable.BlackoutReinforcementBuff].up and CheckPrevSpell(classtable.FistsofFury) and talents[classtable.ShadowboxingTreads] and (MaxDps.tier and MaxDps.tier[31].count >= 2) and not talents[classtable.DanceofChiji]) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up and CheckPrevSpell(classtable.FistsofFury) and debuff[classtable.SkyreachExhaustionDeBuff].remains >55 and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up and CheckPrevSpell(classtable.FistsofFury) and debuff[classtable.SkyreachExhaustionDeBuff].remains >55 and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.FistsofFury) and CheckSpellCosts(classtable.FistsofFury, 'FistsofFury')) and (buff[classtable.InvokersDelightBuff].up and ( targets <3 or not (MaxDps.tier and MaxDps.tier[31].count >= 2) )) and cooldown[classtable.FistsofFury].ready then
         return classtable.FistsofFury
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and (targets==5) and not buff[classtable.BlackoutReinforcementBuff].up and targets >2 and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and (targets==5) and not buff[classtable.BlackoutReinforcementBuff].up and targets >2 and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and (targets==5) and buff[classtable.BlackoutReinforcementBuff].up and targets >2 and CheckPrevSpell(classtable.BlackoutKick) and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and (targets==5) and buff[classtable.BlackoutReinforcementBuff].up and targets >2 and CheckPrevSpell(classtable.BlackoutKick) and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and (targets==5) and buff[classtable.BonedustBrewBuff].up and targets >2 and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and (targets==5) and buff[classtable.BonedustBrewBuff].up and targets >2 and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.FistsofFuryCancel) and CheckSpellCosts(classtable.FistsofFuryCancel, 'FistsofFuryCancel')) and (targets <3 or not (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.FistsofFuryCancel].ready then
         return classtable.FistsofFuryCancel
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up and buff[classtable.BonedustBrewBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up and buff[classtable.BonedustBrewBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick)) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick)) and cooldown[classtable.BlackoutKick].ready then
@@ -1377,7 +1377,7 @@ function Windwalker:serenity_lust()
     if (MaxDps:FindSpell(classtable.TigerPalm) and CheckSpellCosts(classtable.TigerPalm, 'TigerPalm')) and (talents[classtable.TeachingsoftheMonastery] and buff[classtable.TeachingsoftheMonasteryBuff].count <3) and cooldown[classtable.TigerPalm].ready then
         return classtable.TigerPalm
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
 end
@@ -1385,7 +1385,7 @@ function Windwalker:serenity_st()
     if (MaxDps:FindSpell(classtable.JadefireStomp) and CheckSpellCosts(classtable.JadefireStomp, 'JadefireStomp') and talents[classtable.JadefireStomp]) and (debuff[classtable.JadefireBrandDamageDeBuff].remains <2 and not debuff[classtable.SkyreachExhaustionDeBuff].up) and cooldown[classtable.JadefireStomp].ready then
         return classtable.JadefireStomp
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and buff[classtable.SerenityBuff].remains <1.5 and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 4)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and buff[classtable.SerenityBuff].remains <1.5 and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 4)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.TigerPalm) and CheckSpellCosts(classtable.TigerPalm, 'TigerPalm')) and (not debuff[classtable.SkyreachExhaustionDeBuff].up and IsComboStrike(classtable.TigerPalm)) and cooldown[classtable.TigerPalm].ready then
@@ -1415,13 +1415,13 @@ function Windwalker:serenity_st()
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick) and (MaxDps.tier and MaxDps.tier[31].count >= 2) and buff[classtable.BlackoutReinforcementBuff].up and CheckPrevSpell(classtable.RisingSunKick)) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up and CheckPrevSpell(classtable.FistsofFury) and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up and CheckPrevSpell(classtable.FistsofFury) and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick) and buff[classtable.BlackoutReinforcementBuff].up and CheckPrevSpell(classtable.FistsofFury) and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2) and CheckPrevSpell(classtable.FistsofFury)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2) and CheckPrevSpell(classtable.FistsofFury)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.FistsofFury) and CheckSpellCosts(classtable.FistsofFury, 'FistsofFury')) and (buff[classtable.InvokersDelightBuff].up) and cooldown[classtable.FistsofFury].ready then
@@ -1430,7 +1430,7 @@ function Windwalker:serenity_st()
     if (MaxDps:FindSpell(classtable.FistsofFuryCancel) and CheckSpellCosts(classtable.FistsofFuryCancel, 'FistsofFuryCancel')) and cooldown[classtable.FistsofFuryCancel].ready then
         return classtable.FistsofFuryCancel
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >(select(4,GetSpellInfo(classtable.SpinningCraneKick))) and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (ttd >((GetSpellInfo(classtable.SpinningCraneKick).castTime )) and IsComboStrike(classtable.SpinningCraneKick) and not buff[classtable.BlackoutReinforcementBuff].up and (MaxDps.tier and MaxDps.tier[31].count >= 2)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
     if (MaxDps:FindSpell(classtable.StrikeoftheWindlord) and CheckSpellCosts(classtable.StrikeoftheWindlord, 'StrikeoftheWindlord')) and (debuff[classtable.SkyreachExhaustionDeBuff].remains >buff[classtable.CallToDominanceBuff].remains) and cooldown[classtable.StrikeoftheWindlord].ready then
