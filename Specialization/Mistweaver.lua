@@ -237,7 +237,7 @@ end
 
 function Mistweaver:callaction()
     if (MaxDps:FindSpell(classtable.SpearHandStrike) and CheckSpellCosts(classtable.SpearHandStrike, 'SpearHandStrike')) and cooldown[classtable.SpearHandStrike].ready then
-        MaxDps:GlowCooldown(classtable.SpearHandStrike, select(8,UnitCastingInfo('target') == false) and cooldown[classtable.SpearHandStrike].ready)
+        MaxDps:GlowCooldown(classtable.SpearHandStrike, ( select(8,UnitCastingInfo('target')) ~= nil and not select(8,UnitCastingInfo('target')) or select(7,UnitChannelInfo('target')) ~= nil and not select(7,UnitChannelInfo('target'))) )
     end
     --if (pet.chiji.up) then
     if ( UnitExists('pet') and UnitName('pet')  == "Chi-Ji" ) then
