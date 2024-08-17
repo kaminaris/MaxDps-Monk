@@ -60,6 +60,7 @@ local LibRangeCheck = LibStub('LibRangeCheck-3.0', true)
 
 local Chi
 local ChiMax
+local ChiDeficit
 local Energy
 local EnergyMax
 local EnergyDeficit
@@ -77,6 +78,7 @@ local Brewmaster = {}
 
 local function CheckSpellCosts(spell,spellstring)
     if not IsSpellKnownOrOverridesKnown(spell) then return false end
+    if not C_Spell.IsSpellUsable(spell) then return false end
     if spellstring == 'TouchofDeath' then
         if targethealthPerc > 15 then
             return false
@@ -161,6 +163,23 @@ local function CheckPrevSpell(spell)
 end
 
 
+local function boss()
+    if UnitExists('boss1')
+    or UnitExists('boss2')
+    or UnitExists('boss3')
+    or UnitExists('boss4')
+    or UnitExists('boss5')
+    or UnitExists('boss6')
+    or UnitExists('boss7')
+    or UnitExists('boss8')
+    or UnitExists('boss9')
+    or UnitExists('boss10') then
+        return true
+    end
+    return false
+end
+
+
 function Brewmaster:precombat()
     if (MaxDps:FindSpell(classtable.ChiBurst) and CheckSpellCosts(classtable.ChiBurst, 'ChiBurst')) and (talents[classtable.ChiBurst]) and cooldown[classtable.ChiBurst].ready then
         return classtable.ChiBurst
@@ -229,7 +248,7 @@ function Brewmaster:rotation_boc()
     --    MaxDps:GlowCooldown(classtable.PurifyingBrew, cooldown[classtable.PurifyingBrew].ready)
     --end
     if (MaxDps:FindSpell(classtable.WeaponsofOrder) and CheckSpellCosts(classtable.WeaponsofOrder, 'WeaponsofOrder')) and (( buff[classtable.RecentPurifiesBuff].up ) and talents[classtable.ImprovedInvokeNiuzaotheBlackOx]) and cooldown[classtable.WeaponsofOrder].ready then
-        return classtable.WeaponsofOrder
+        MaxDps:GlowCooldown(classtable.WeaponsofOrder, cooldown[classtable.WeaponsofOrder].ready)
     end
     if (MaxDps:FindSpell(classtable.InvokeNiuzaotheBlackOx) and CheckSpellCosts(classtable.InvokeNiuzaotheBlackOx, 'InvokeNiuzaotheBlackOx')) and (( not buff[classtable.InvokeNiuzaotheBlackOxBuff].up and buff[classtable.RecentPurifiesBuff].up and buff[classtable.WeaponsofOrderBuff].remains <14 ) and talents[classtable.ImprovedInvokeNiuzaotheBlackOx]) and cooldown[classtable.InvokeNiuzaotheBlackOx].ready then
         MaxDps:GlowCooldown(classtable.InvokeNiuzaotheBlackOx, cooldown[classtable.InvokeNiuzaotheBlackOx].ready)
@@ -241,7 +260,7 @@ function Brewmaster:rotation_boc()
         MaxDps:GlowCooldown(classtable.InvokeNiuzaotheBlackOx, cooldown[classtable.InvokeNiuzaotheBlackOx].ready)
     end
     if (MaxDps:FindSpell(classtable.WeaponsofOrder) and CheckSpellCosts(classtable.WeaponsofOrder, 'WeaponsofOrder')) and (( talents[classtable.WeaponsofOrder] ) and not talents[classtable.ImprovedInvokeNiuzaotheBlackOx]) and cooldown[classtable.WeaponsofOrder].ready then
-        return classtable.WeaponsofOrder
+        MaxDps:GlowCooldown(classtable.WeaponsofOrder, cooldown[classtable.WeaponsofOrder].ready)
     end
     if (MaxDps:FindSpell(classtable.KegSmash) and CheckSpellCosts(classtable.KegSmash, 'KegSmash')) and (( timeInCombat - WoOLastUsed <2 )) and cooldown[classtable.KegSmash].ready then
         return classtable.KegSmash
@@ -393,6 +412,7 @@ function Monk:Brewmaster()
     SpellCrit = GetCritChance()
     Chi = UnitPower('player', ChiPT)
     ChiMax = UnitPowerMax('player', ChiPT)
+    ChiDeficit = ChiMax - Chi
     Energy = UnitPower('player', EnergyPT)
     EnergyMax = UnitPowerMax('player', EnergyPT)
     EnergyDeficit = EnergyMax - Energy
@@ -425,6 +445,7 @@ function Monk:Brewmaster()
     if precombatCheck then
         return Brewmaster:precombat()
     end
+
     local callactionCheck = Brewmaster:callaction()
     if callactionCheck then
         return Brewmaster:callaction()
