@@ -208,13 +208,30 @@ local function CheckPrevSpell(spell)
 end
 
 
+local function boss()
+    if UnitExists('boss1')
+    or UnitExists('boss2')
+    or UnitExists('boss3')
+    or UnitExists('boss4')
+    or UnitExists('boss5')
+    or UnitExists('boss6')
+    or UnitExists('boss7')
+    or UnitExists('boss8')
+    or UnitExists('boss9')
+    or UnitExists('boss10') then
+        return true
+    end
+    return false
+end
+
+
 function Windwalker:trinkets()
 end
 function Windwalker:cooldowns()
     if (MaxDps:FindSpell(classtable.InvokeXuentheWhiteTiger) and CheckSpellCosts(classtable.InvokeXuentheWhiteTiger, 'InvokeXuentheWhiteTiger')) and (( targets >2 or debuff[classtable.AcclamationDeBuff].up ) and ( CheckPrevSpell(classtable.TigerPalm) or Energy <60 and not talents[classtable.InnerPeace] or Energy <55 and talents[classtable.InnerPeace] or Chi >3 )) and cooldown[classtable.InvokeXuentheWhiteTiger].ready then
         MaxDps:GlowCooldown(classtable.InvokeXuentheWhiteTiger, cooldown[classtable.InvokeXuentheWhiteTiger].ready)
     end
-    if (MaxDps:FindSpell(classtable.StormEarthandFire) and CheckSpellCosts(classtable.StormEarthandFire, 'StormEarthandFire')) and (( buff[classtable.InvokersDelightBuff].up or ttd >15 and cooldown[classtable.StormEarthandFire].fullRecharge <cooldown[classtable.InvokeXuentheWhiteTiger].remains and cooldown[classtable.StrikeoftheWindlord].remains <2 ) or MaxDps:Bloodlust() and cooldown[classtable.InvokeXuentheWhiteTiger].remains) and cooldown[classtable.StormEarthandFire].ready then
+    if (MaxDps:FindSpell(classtable.StormEarthandFire) and CheckSpellCosts(classtable.StormEarthandFire, 'StormEarthandFire')) and (( buff[classtable.InvokersDelightBuff].up or ttd >15 and cooldown[classtable.StormEarthandFire].fullRecharge <cooldown[classtable.InvokeXuentheWhiteTiger].remains and cooldown[classtable.StrikeoftheWindlord].remains <2 ) or boss and ttd <= 30 or MaxDps:Bloodlust() and cooldown[classtable.InvokeXuentheWhiteTiger].remains) and cooldown[classtable.StormEarthandFire].ready then
         MaxDps:GlowCooldown(classtable.StormEarthandFire, cooldown[classtable.StormEarthandFire].ready)
     end
     if (MaxDps:FindSpell(classtable.TouchofKarma) and CheckSpellCosts(classtable.TouchofKarma, 'TouchofKarma')) and cooldown[classtable.TouchofKarma].ready then
