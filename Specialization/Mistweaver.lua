@@ -60,6 +60,7 @@ local LibRangeCheck = LibStub('LibRangeCheck-3.0', true)
 
 local Chi
 local ChiMax
+local ChiDeficit
 local Energy
 local EnergyMax
 local EnergyDeficit
@@ -74,6 +75,7 @@ local Mistweaver = {}
 
 local function CheckSpellCosts(spell,spellstring)
     if not IsSpellKnownOrOverridesKnown(spell) then return false end
+    if not C_Spell.IsSpellUsable(spell) then return false end
     if spellstring == 'TouchofDeath' then
         if targethealthPerc > 15 then
             return false
@@ -285,6 +287,7 @@ function Monk:Mistweaver()
     SpellCrit = GetCritChance()
     Chi = UnitPower('player', ChiPT)
     ChiMax = UnitPowerMax('player', ChiPT)
+    ChiDeficit = ChiMax - Chi
     Energy = UnitPower('player', EnergyPT)
     EnergyMax = UnitPowerMax('player', EnergyPT)
     EnergyDeficit = EnergyMax - Energy
@@ -306,6 +309,7 @@ function Monk:Mistweaver()
     if precombatCheck then
         return Mistweaver:precombat()
     end
+
     local callactionCheck = Mistweaver:callaction()
     if callactionCheck then
         return Mistweaver:callaction()
