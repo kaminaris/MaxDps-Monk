@@ -79,26 +79,6 @@ local Brewmaster = {}
 local function CheckSpellCosts(spell,spellstring)
     if not IsSpellKnown(spell) then return false end
     if not C_Spell.IsSpellUsable(spell) then return false end
-    if spellstring == 'TouchofDeath' then
-        if targethealthPerc > 15 then
-            return false
-        end
-    end
-    if spellstring == 'KillShot' then
-        if (classtable.SicEmBuff and not buff[classtable.SicEmBuff].up) or (classtable.HuntersPreyBuff and not buff[classtable.HuntersPreyBuff].up) and targethealthPerc > 15 then
-            return false
-        end
-    end
-    if spellstring == 'HammerofWrath' then
-        if ( (classtable.AvengingWrathBuff and not buff[classtable.AvengingWrathBuff].up) or (classtable.FinalVerdictBuff and not buff[classtable.FinalVerdictBuff].up) ) and targethealthPerc > 20 then
-            return false
-        end
-    end
-    if spellstring == 'Execute' then
-        if (classtable.SuddenDeathBuff and not buff[classtable.SuddenDeathBuff].up) and targethealthPerc > 35 then
-            return false
-        end
-    end
     local costs = C_Spell.GetSpellPowerCost(spell)
     if type(costs) ~= 'table' and spellstring then return true end
     for i,costtable in pairs(costs) do
@@ -206,9 +186,6 @@ function Brewmaster:rotation_pta()
     if (CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    --if (CheckSpellCosts(classtable.PurifyingBrew, 'PurifyingBrew')) and (( not buff[classtable.BlackoutComboBuff].up )) and cooldown[classtable.PurifyingBrew].ready then
-    --    MaxDps:GlowCooldown(classtable.PurifyingBrew, cooldown[classtable.PurifyingBrew].ready)
-    --end
     if (CheckSpellCosts(classtable.BlackOxBrew, 'BlackOxBrew')) and (Energy + EnergyRegen <= 40) and cooldown[classtable.BlackOxBrew].ready then
         return classtable.BlackOxBrew
     end
@@ -244,9 +221,6 @@ function Brewmaster:rotation_boc()
     if (CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    --if (CheckSpellCosts(classtable.PurifyingBrew, 'PurifyingBrew')) and (( not buff[classtable.BlackoutComboBuff].up and ( not buff[classtable.RecentPurifiesBuff].up or cooldown[classtable.PurifyingBrew].charges >( 1 + (talents[classtable.ImprovedPurifyingBrew] and talents[classtable.ImprovedPurifyingBrew] or 0) - 0.1 ) ) ) and talents[classtable.ImprovedInvokeNiuzaotheBlackOx] and ( cooldown[classtable.WeaponsofOrder].remains >40 or cooldown[classtable.WeaponsofOrder].remains <5 )) and cooldown[classtable.PurifyingBrew].ready then
-    --    MaxDps:GlowCooldown(classtable.PurifyingBrew, cooldown[classtable.PurifyingBrew].ready)
-    --end
     if (CheckSpellCosts(classtable.WeaponsofOrder, 'WeaponsofOrder')) and (( buff[classtable.RecentPurifiesBuff].up ) and talents[classtable.ImprovedInvokeNiuzaotheBlackOx]) and cooldown[classtable.WeaponsofOrder].ready then
         MaxDps:GlowCooldown(classtable.WeaponsofOrder, cooldown[classtable.WeaponsofOrder].ready)
     end
@@ -271,9 +245,6 @@ function Brewmaster:rotation_boc()
     if (CheckSpellCosts(classtable.KegSmash, 'KegSmash')) and (( buff[classtable.WeaponsofOrderBuff].remains <gcd * 2 ) and talents[classtable.ImprovedInvokeNiuzaotheBlackOx]) and cooldown[classtable.KegSmash].ready then
         return classtable.KegSmash
     end
-    --if (CheckSpellCosts(classtable.PurifyingBrew, 'PurifyingBrew')) and (( not buff[classtable.BlackoutComboBuff].up ) and not talents[classtable.ImprovedInvokeNiuzaotheBlackOx]) and cooldown[classtable.PurifyingBrew].ready then
-    --    MaxDps:GlowCooldown(classtable.PurifyingBrew, cooldown[classtable.PurifyingBrew].ready)
-    --end
     if (CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and cooldown[classtable.RisingSunKick].ready then
         return classtable.RisingSunKick
     end

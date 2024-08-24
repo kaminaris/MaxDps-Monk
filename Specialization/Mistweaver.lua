@@ -76,26 +76,6 @@ local Mistweaver = {}
 local function CheckSpellCosts(spell,spellstring)
     if not IsSpellKnown(spell) then return false end
     if not C_Spell.IsSpellUsable(spell) then return false end
-    if spellstring == 'TouchofDeath' then
-        if targethealthPerc > 15 then
-            return false
-        end
-    end
-    if spellstring == 'KillShot' then
-        if (classtable.SicEmBuff and not buff[classtable.SicEmBuff].up) or (classtable.HuntersPreyBuff and not buff[classtable.HuntersPreyBuff].up) and targethealthPerc > 15 then
-            return false
-        end
-    end
-    if spellstring == 'HammerofWrath' then
-        if ( (classtable.AvengingWrathBuff and not buff[classtable.AvengingWrathBuff].up) or (classtable.FinalVerdictBuff and not buff[classtable.FinalVerdictBuff].up) ) and targethealthPerc > 20 then
-            return false
-        end
-    end
-    if spellstring == 'Execute' then
-        if (classtable.SuddenDeathBuff and not buff[classtable.SuddenDeathBuff].up) and targethealthPerc > 35 then
-            return false
-        end
-    end
     local costs = C_Spell.GetSpellPowerCost(spell)
     if type(costs) ~= 'table' and spellstring then return true end
     for i,costtable in pairs(costs) do
@@ -240,12 +220,11 @@ function Mistweaver:callaction()
         MaxDps:GlowCooldown(classtable.SpearHandStrike, ( select(8,UnitCastingInfo('target')) ~= nil and not select(8,UnitCastingInfo('target')) or select(7,UnitChannelInfo('target')) ~= nil and not select(7,UnitChannelInfo('target'))) )
     end
     --if (pet.chiji.up) then
-    if ( UnitExists('pet') and UnitName('pet')  == "Chi-Ji" ) then
         local craneCheck = Mistweaver:crane()
         if craneCheck then
             return Mistweaver:crane()
         end
-    end
+    --end
     if (CheckSpellCosts(classtable.JadefireStomp, 'JadefireStomp')) and (true or talents[classtable.AncientConcordance] and not buff[classtable.AncientConcordanceBuff].up or talents[classtable.AwakenedFaeline] and not buff[classtable.AwakenedFaelineBuff].up or talents[classtable.AncientTeachings] and not buff[classtable.AncientTeachingsBuff].up) and cooldown[classtable.JadefireStomp].ready then
         return classtable.JadefireStomp
     end
