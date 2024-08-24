@@ -74,7 +74,7 @@ local Mistweaver = {}
 
 
 local function CheckSpellCosts(spell,spellstring)
-    if not IsSpellKnownOrOverridesKnown(spell) then return false end
+    if not IsSpellKnown(spell) then return false end
     if not C_Spell.IsSpellUsable(spell) then return false end
     if spellstring == 'TouchofDeath' then
         if targethealthPerc > 15 then
@@ -161,82 +161,82 @@ end
 
 
 function Mistweaver:precombat()
-    if (MaxDps:FindSpell(classtable.ChiBurst) and CheckSpellCosts(classtable.ChiBurst, 'ChiBurst')) and cooldown[classtable.ChiBurst].ready then
+    if (CheckSpellCosts(classtable.ChiBurst, 'ChiBurst')) and cooldown[classtable.ChiBurst].ready then
         return classtable.ChiBurst
     end
 end
 function Mistweaver:st()
-    if (MaxDps:FindSpell(classtable.ThunderFocusTea) and CheckSpellCosts(classtable.ThunderFocusTea, 'ThunderFocusTea')) and cooldown[classtable.ThunderFocusTea].ready then
+    if (CheckSpellCosts(classtable.ThunderFocusTea, 'ThunderFocusTea')) and cooldown[classtable.ThunderFocusTea].ready then
         return classtable.ThunderFocusTea
     end
-    if (MaxDps:FindSpell(classtable.RisingSunKick) and CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and cooldown[classtable.RisingSunKick].ready then
+    if (CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and cooldown[classtable.RisingSunKick].ready then
         return classtable.RisingSunKick
     end
-    if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (not talents[classtable.TeachingsoftheMonastery] or ( not talents[classtable.AwakenedFaeline] and buff[classtable.TeachingsoftheMonasteryBuff].up or buff[classtable.TeachingsoftheMonasteryBuff].count >3 ) and cooldown[classtable.RisingSunKick].remains >gcd) and cooldown[classtable.BlackoutKick].ready then
+    if (CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (not talents[classtable.TeachingsoftheMonastery] or ( not talents[classtable.AwakenedFaeline] and buff[classtable.TeachingsoftheMonasteryBuff].up or buff[classtable.TeachingsoftheMonasteryBuff].count >3 ) and cooldown[classtable.RisingSunKick].remains >gcd) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    --if (MaxDps:FindSpell(classtable.Vivify) and CheckSpellCosts(classtable.Vivify, 'Vivify')) and (buff[classtable.ZenPulseBuff].up) and cooldown[classtable.Vivify].ready then
+    --if (CheckSpellCosts(classtable.Vivify, 'Vivify')) and (buff[classtable.ZenPulseBuff].up) and cooldown[classtable.Vivify].ready then
     --    MaxDps:GlowCooldown(classtable.Vivify, cooldown[classtable.Vivify].ready)
     --end
-    if (MaxDps:FindSpell(classtable.ChiBurst) and CheckSpellCosts(classtable.ChiBurst, 'ChiBurst')) and cooldown[classtable.ChiBurst].ready then
+    if (CheckSpellCosts(classtable.ChiBurst, 'ChiBurst')) and cooldown[classtable.ChiBurst].ready then
         return classtable.ChiBurst
     end
-    if (MaxDps:FindSpell(classtable.TigerPalm) and CheckSpellCosts(classtable.TigerPalm, 'TigerPalm')) and cooldown[classtable.TigerPalm].ready then
+    if (CheckSpellCosts(classtable.TigerPalm, 'TigerPalm')) and cooldown[classtable.TigerPalm].ready then
         return classtable.TigerPalm
     end
 end
 function Mistweaver:aoe()
-    if (MaxDps:FindSpell(classtable.ThunderFocusTea) and CheckSpellCosts(classtable.ThunderFocusTea, 'ThunderFocusTea')) and (targets <= 3) and cooldown[classtable.ThunderFocusTea].ready then
+    if (CheckSpellCosts(classtable.ThunderFocusTea, 'ThunderFocusTea')) and (targets <= 3) and cooldown[classtable.ThunderFocusTea].ready then
         return classtable.ThunderFocusTea
     end
-    --if (MaxDps:FindSpell(classtable.Vivify) and CheckSpellCosts(classtable.Vivify, 'Vivify')) and (buff[classtable.ZenPulseBuff].up) and cooldown[classtable.Vivify].ready then
+    --if (CheckSpellCosts(classtable.Vivify, 'Vivify')) and (buff[classtable.ZenPulseBuff].up) and cooldown[classtable.Vivify].ready then
     --    MaxDps:GlowCooldown(classtable.Vivify, cooldown[classtable.Vivify].ready)
     --end
-    if (MaxDps:FindSpell(classtable.RisingSunKick) and CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and (targets <= 3) and cooldown[classtable.RisingSunKick].ready then
+    if (CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and (targets <= 3) and cooldown[classtable.RisingSunKick].ready then
         return classtable.RisingSunKick
     end
-    if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (not talents[classtable.TeachingsoftheMonastery] or buff[classtable.TeachingsoftheMonasteryBuff].up and targets <= 3) and cooldown[classtable.BlackoutKick].ready then
+    if (CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (not talents[classtable.TeachingsoftheMonastery] or buff[classtable.TeachingsoftheMonasteryBuff].up and targets <= 3) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.ChiBurst) and CheckSpellCosts(classtable.ChiBurst, 'ChiBurst')) and cooldown[classtable.ChiBurst].ready then
+    if (CheckSpellCosts(classtable.ChiBurst, 'ChiBurst')) and cooldown[classtable.ChiBurst].ready then
         return classtable.ChiBurst
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and cooldown[classtable.SpinningCraneKick].ready then
+    if (CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
 end
 function Mistweaver:crane()
-    if (MaxDps:FindSpell(classtable.RenewingMist) and CheckSpellCosts(classtable.RenewingMist, 'RenewingMist')) and (cooldown[classtable.RenewingMist].fullRecharge <= gcd) and cooldown[classtable.RenewingMist].ready then
+    if (CheckSpellCosts(classtable.RenewingMist, 'RenewingMist')) and (cooldown[classtable.RenewingMist].fullRecharge <= gcd) and cooldown[classtable.RenewingMist].ready then
         return classtable.RenewingMist
     end
-    if (MaxDps:FindSpell(classtable.ThunderFocusTea) and CheckSpellCosts(classtable.ThunderFocusTea, 'ThunderFocusTea')) and (talents[classtable.AncientTeachings] and buff[classtable.AncientTeachingsBuff].remains <gcd) and cooldown[classtable.ThunderFocusTea].ready then
+    if (CheckSpellCosts(classtable.ThunderFocusTea, 'ThunderFocusTea')) and (talents[classtable.AncientTeachings] and buff[classtable.AncientTeachingsBuff].remains <gcd) and cooldown[classtable.ThunderFocusTea].ready then
         return classtable.ThunderFocusTea
     end
-    --if (MaxDps:FindSpell(classtable.EssenceFont) and CheckSpellCosts(classtable.EssenceFont, 'EssenceFont')) and (talents[classtable.AncientTeachings] and buff[classtable.AncientTeachingsBuff].remains <gcd) and cooldown[classtable.EssenceFont].ready then
+    --if (CheckSpellCosts(classtable.EssenceFont, 'EssenceFont')) and (talents[classtable.AncientTeachings] and buff[classtable.AncientTeachingsBuff].remains <gcd) and cooldown[classtable.EssenceFont].ready then
     --    return classtable.EssenceFont
     --end
-    if (MaxDps:FindSpell(classtable.JadefireStomp) and CheckSpellCosts(classtable.JadefireStomp, 'JadefireStomp')) and (talents[classtable.AncientTeachings] and buff[classtable.AncientTeachingsBuff].remains <gcd) and cooldown[classtable.JadefireStomp].ready then
+    if (CheckSpellCosts(classtable.JadefireStomp, 'JadefireStomp')) and (talents[classtable.AncientTeachings] and buff[classtable.AncientTeachingsBuff].remains <gcd) and cooldown[classtable.JadefireStomp].ready then
         return classtable.JadefireStomp
     end
-    if (MaxDps:FindSpell(classtable.EnvelopingMist) and CheckSpellCosts(classtable.EnvelopingMist, 'EnvelopingMist')) and (buff[classtable.InvokeChijiBuff].count >1) and cooldown[classtable.EnvelopingMist].ready then
+    if (CheckSpellCosts(classtable.EnvelopingMist, 'EnvelopingMist')) and (buff[classtable.InvokeChijiBuff].count >1) and cooldown[classtable.EnvelopingMist].ready then
         return classtable.EnvelopingMist
     end
-    if (MaxDps:FindSpell(classtable.RisingSunKick) and CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and cooldown[classtable.RisingSunKick].ready then
+    if (CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and cooldown[classtable.RisingSunKick].ready then
         return classtable.RisingSunKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (targets >3 or targets >1 and not talents[classtable.AncientConcordance] and not talents[classtable.AwakenedJadefire]) and cooldown[classtable.SpinningCraneKick].ready then
+    if (CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (targets >3 or targets >1 and not talents[classtable.AncientConcordance] and not talents[classtable.AwakenedJadefire]) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
-    if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and cooldown[classtable.BlackoutKick].ready then
+    if (CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.TigerPalm) and CheckSpellCosts(classtable.TigerPalm, 'TigerPalm')) and cooldown[classtable.TigerPalm].ready then
+    if (CheckSpellCosts(classtable.TigerPalm, 'TigerPalm')) and cooldown[classtable.TigerPalm].ready then
         return classtable.TigerPalm
     end
 end
 
 function Mistweaver:callaction()
-    if (MaxDps:FindSpell(classtable.SpearHandStrike) and CheckSpellCosts(classtable.SpearHandStrike, 'SpearHandStrike')) and cooldown[classtable.SpearHandStrike].ready then
+    if (CheckSpellCosts(classtable.SpearHandStrike, 'SpearHandStrike')) and cooldown[classtable.SpearHandStrike].ready then
         MaxDps:GlowCooldown(classtable.SpearHandStrike, ( select(8,UnitCastingInfo('target')) ~= nil and not select(8,UnitCastingInfo('target')) or select(7,UnitChannelInfo('target')) ~= nil and not select(7,UnitChannelInfo('target'))) )
     end
     --if (pet.chiji.up) then
@@ -246,7 +246,7 @@ function Mistweaver:callaction()
             return Mistweaver:crane()
         end
     end
-    if (MaxDps:FindSpell(classtable.JadefireStomp) and CheckSpellCosts(classtable.JadefireStomp, 'JadefireStomp')) and (true or talents[classtable.AncientConcordance] and not buff[classtable.AncientConcordanceBuff].up or talents[classtable.AwakenedFaeline] and not buff[classtable.AwakenedFaelineBuff].up or talents[classtable.AncientTeachings] and not buff[classtable.AncientTeachingsBuff].up) and cooldown[classtable.JadefireStomp].ready then
+    if (CheckSpellCosts(classtable.JadefireStomp, 'JadefireStomp')) and (true or talents[classtable.AncientConcordance] and not buff[classtable.AncientConcordanceBuff].up or talents[classtable.AwakenedFaeline] and not buff[classtable.AwakenedFaelineBuff].up or talents[classtable.AncientTeachings] and not buff[classtable.AncientTeachingsBuff].up) and cooldown[classtable.JadefireStomp].ready then
         return classtable.JadefireStomp
     end
     if (targets >= 3) then

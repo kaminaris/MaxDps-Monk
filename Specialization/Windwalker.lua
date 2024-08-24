@@ -74,7 +74,7 @@ local Windwalker = {}
 
 
 local function CheckSpellCosts(spell,spellstring)
-    if not IsSpellKnownOrOverridesKnown(spell) then return false end
+    if not IsSpellKnown(spell) then return false end
     if not C_Spell.IsSpellUsable(spell) then return false end
     if spellstring == 'TouchofDeath' then
         if targethealthPerc > 15 then
@@ -228,170 +228,170 @@ end
 function Windwalker:trinkets()
 end
 function Windwalker:cooldowns()
-    if (MaxDps:FindSpell(classtable.InvokeXuentheWhiteTiger) and CheckSpellCosts(classtable.InvokeXuentheWhiteTiger, 'InvokeXuentheWhiteTiger')) and (( targets >2 or debuff[classtable.AcclamationDeBuff].up ) and ( CheckPrevSpell(classtable.TigerPalm) or Energy <60 and not talents[classtable.InnerPeace] or Energy <55 and talents[classtable.InnerPeace] or Chi >3 )) and cooldown[classtable.InvokeXuentheWhiteTiger].ready then
+    if (CheckSpellCosts(classtable.InvokeXuentheWhiteTiger, 'InvokeXuentheWhiteTiger')) and (( targets >2 or debuff[classtable.AcclamationDeBuff].up ) and ( CheckPrevSpell(classtable.TigerPalm) or Energy <60 and not talents[classtable.InnerPeace] or Energy <55 and talents[classtable.InnerPeace] or Chi >3 )) and cooldown[classtable.InvokeXuentheWhiteTiger].ready then
         MaxDps:GlowCooldown(classtable.InvokeXuentheWhiteTiger, cooldown[classtable.InvokeXuentheWhiteTiger].ready)
     end
-    if (MaxDps:FindSpell(classtable.StormEarthandFire) and CheckSpellCosts(classtable.StormEarthandFire, 'StormEarthandFire')) and (( buff[classtable.InvokersDelightBuff].up or ttd >15 and cooldown[classtable.StormEarthandFire].fullRecharge <cooldown[classtable.InvokeXuentheWhiteTiger].remains and cooldown[classtable.StrikeoftheWindlord].remains <2 ) or boss and ttd <= 30 or MaxDps:Bloodlust() and cooldown[classtable.InvokeXuentheWhiteTiger].remains) and cooldown[classtable.StormEarthandFire].ready then
+    if (CheckSpellCosts(classtable.StormEarthandFire, 'StormEarthandFire')) and (( buff[classtable.InvokersDelightBuff].up or ttd >15 and cooldown[classtable.StormEarthandFire].fullRecharge <cooldown[classtable.InvokeXuentheWhiteTiger].remains and cooldown[classtable.StrikeoftheWindlord].remains <2 ) or boss and ttd <= 30 or MaxDps:Bloodlust() and cooldown[classtable.InvokeXuentheWhiteTiger].remains) and cooldown[classtable.StormEarthandFire].ready then
         MaxDps:GlowCooldown(classtable.StormEarthandFire, cooldown[classtable.StormEarthandFire].ready)
     end
-    if (MaxDps:FindSpell(classtable.TouchofKarma) and CheckSpellCosts(classtable.TouchofKarma, 'TouchofKarma')) and cooldown[classtable.TouchofKarma].ready then
+    if (CheckSpellCosts(classtable.TouchofKarma, 'TouchofKarma')) and cooldown[classtable.TouchofKarma].ready then
         MaxDps:GlowCooldown(classtable.TouchofKarma, cooldown[classtable.TouchofKarma].ready)
     end
 end
 function Windwalker:default_aoe()
-    if (MaxDps:FindSpell(classtable.TigerPalm) and CheckSpellCosts(classtable.TigerPalm, 'TigerPalm')) and (( Energy >55 and talents[classtable.InnerPeace] or Energy >60 and not talents[classtable.InnerPeace] ) and IsComboStrike(classtable.TigerPalm) and ChiMax - Chi >= 2 and buff[classtable.TeachingsoftheMonasteryBuff].count <4 and not buff[classtable.OrderedElementsBuff].up and ( not (MaxDps.tier and MaxDps.tier[30].count >= 2) or (MaxDps.tier and MaxDps.tier[30].count >= 2) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up and talents[classtable.EnergyBurst] ) or buff[classtable.StormEarthandFireBuff].remains >3 and cooldown[classtable.FistsofFury].remains <3 and Chi <2) and cooldown[classtable.TigerPalm].ready then
+    if (CheckSpellCosts(classtable.TigerPalm, 'TigerPalm')) and (( Energy >55 and talents[classtable.InnerPeace] or Energy >60 and not talents[classtable.InnerPeace] ) and IsComboStrike(classtable.TigerPalm) and ChiMax - Chi >= 2 and buff[classtable.TeachingsoftheMonasteryBuff].count <4 and not buff[classtable.OrderedElementsBuff].up and ( not (MaxDps.tier and MaxDps.tier[30].count >= 2) or (MaxDps.tier and MaxDps.tier[30].count >= 2) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up and talents[classtable.EnergyBurst] ) or buff[classtable.StormEarthandFireBuff].remains >3 and cooldown[classtable.FistsofFury].remains <3 and Chi <2) and cooldown[classtable.TigerPalm].ready then
         return classtable.TigerPalm
     end
-    if (MaxDps:FindSpell(classtable.TouchofDeath) and CheckSpellCosts(classtable.TouchofDeath, 'TouchofDeath')) and cooldown[classtable.TouchofDeath].ready then
+    if (CheckSpellCosts(classtable.TouchofDeath, 'TouchofDeath')) and cooldown[classtable.TouchofDeath].ready then
         return classtable.TouchofDeath
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (buff[classtable.DanceofChijiBuff].count == 2 and IsComboStrike(classtable.SpinningCraneKick)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (buff[classtable.DanceofChijiBuff].count == 2 and IsComboStrike(classtable.SpinningCraneKick)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
-    if (MaxDps:FindSpell(classtable.RisingSunKick) and CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and (buff[classtable.OrderedElementsBuff].remains <2 and buff[classtable.StormEarthandFireBuff].up and talents[classtable.OrderedElements]) and cooldown[classtable.RisingSunKick].ready then
+    if (CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and (buff[classtable.OrderedElementsBuff].remains <2 and buff[classtable.StormEarthandFireBuff].up and talents[classtable.OrderedElements]) and cooldown[classtable.RisingSunKick].ready then
         return classtable.RisingSunKick
     end
-    if (MaxDps:FindSpell(classtable.CelestialConduit) and CheckSpellCosts(classtable.CelestialConduit, 'CelestialConduit')) and (buff[classtable.StormEarthandFireBuff].up and buff[classtable.OrderedElementsBuff].up and cooldown[classtable.StrikeoftheWindlord].remains) and cooldown[classtable.CelestialConduit].ready then
+    if (CheckSpellCosts(classtable.CelestialConduit, 'CelestialConduit')) and (buff[classtable.StormEarthandFireBuff].up and buff[classtable.OrderedElementsBuff].up and cooldown[classtable.StrikeoftheWindlord].remains) and cooldown[classtable.CelestialConduit].ready then
         return classtable.CelestialConduit
     end
-    if (MaxDps:FindSpell(classtable.ChiBurst) and CheckSpellCosts(classtable.ChiBurst, 'ChiBurst')) and (IsComboStrike(classtable.ChiBurst)) and cooldown[classtable.ChiBurst].ready then
+    if (CheckSpellCosts(classtable.ChiBurst, 'ChiBurst')) and (IsComboStrike(classtable.ChiBurst)) and cooldown[classtable.ChiBurst].ready then
         return classtable.ChiBurst
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (buff[classtable.DanceofChijiBuff].count == 2 or buff[classtable.DanceofChijiBuff].up and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.StormEarthandFireBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
+    if (CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (buff[classtable.DanceofChijiBuff].count == 2 or buff[classtable.DanceofChijiBuff].up and IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.StormEarthandFireBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
-    if (MaxDps:FindSpell(classtable.WhirlingDragonPunch) and CheckSpellCosts(classtable.WhirlingDragonPunch, 'WhirlingDragonPunch')) and cooldown[classtable.WhirlingDragonPunch].ready then
+    if (CheckSpellCosts(classtable.WhirlingDragonPunch, 'WhirlingDragonPunch')) and cooldown[classtable.WhirlingDragonPunch].ready then
         return classtable.WhirlingDragonPunch
     end
-    if (MaxDps:FindSpell(classtable.StrikeoftheWindlord) and CheckSpellCosts(classtable.StrikeoftheWindlord, 'StrikeoftheWindlord')) and cooldown[classtable.StrikeoftheWindlord].ready then
+    if (CheckSpellCosts(classtable.StrikeoftheWindlord, 'StrikeoftheWindlord')) and cooldown[classtable.StrikeoftheWindlord].ready then
         return classtable.StrikeoftheWindlord
     end
-    if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (buff[classtable.TeachingsoftheMonasteryBuff].count == 8 and talents[classtable.ShadowboxingTreads]) and cooldown[classtable.BlackoutKick].ready then
+    if (CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (buff[classtable.TeachingsoftheMonasteryBuff].count == 8 and talents[classtable.ShadowboxingTreads]) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.FistsofFury) and CheckSpellCosts(classtable.FistsofFury, 'FistsofFury')) and cooldown[classtable.FistsofFury].ready then
+    if (CheckSpellCosts(classtable.FistsofFury, 'FistsofFury')) and cooldown[classtable.FistsofFury].ready then
         return classtable.FistsofFury
     end
-    if (MaxDps:FindSpell(classtable.RisingSunKick) and CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and (talents[classtable.XuensBattlegear] or cooldown[classtable.WhirlingDragonPunch].remains <3) and cooldown[classtable.RisingSunKick].ready then
+    if (CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and (talents[classtable.XuensBattlegear] or cooldown[classtable.WhirlingDragonPunch].remains <3) and cooldown[classtable.RisingSunKick].ready then
         return classtable.RisingSunKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (IsComboStrike(classtable.SpinningCraneKick)) and cooldown[classtable.SpinningCraneKick].ready then
+    if (CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (IsComboStrike(classtable.SpinningCraneKick)) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
-    if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (not talents[classtable.KnowledgeoftheBrokenTemple] and buff[classtable.TeachingsoftheMonasteryBuff].count == 4 and talents[classtable.ShadowboxingTreads]) and cooldown[classtable.BlackoutKick].ready then
+    if (CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (not talents[classtable.KnowledgeoftheBrokenTemple] and buff[classtable.TeachingsoftheMonasteryBuff].count == 4 and talents[classtable.ShadowboxingTreads]) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.TigerPalm) and CheckSpellCosts(classtable.TigerPalm, 'TigerPalm')) and (IsComboStrike(classtable.TigerPalm) and ChiDeficit >= 2 and ( not buff[classtable.OrderedElementsBuff].up or EnergyTimeToMax <= gcd * 3 )) and cooldown[classtable.TigerPalm].ready then
+    if (CheckSpellCosts(classtable.TigerPalm, 'TigerPalm')) and (IsComboStrike(classtable.TigerPalm) and ChiDeficit >= 2 and ( not buff[classtable.OrderedElementsBuff].up or EnergyTimeToMax <= gcd * 3 )) and cooldown[classtable.TigerPalm].ready then
         return classtable.TigerPalm
     end
-    if (MaxDps:FindSpell(classtable.CracklingJadeLightning) and CheckSpellCosts(classtable.CracklingJadeLightning, 'CracklingJadeLightning')) and (buff[classtable.TheEmperorsCapacitorBuff].count >19 and not buff[classtable.OrderedElementsBuff].up and IsComboStrike(classtable.CracklingJadeLightning) and talents[classtable.PoweroftheThunderKing]) and cooldown[classtable.CracklingJadeLightning].ready then
+    if (CheckSpellCosts(classtable.CracklingJadeLightning, 'CracklingJadeLightning')) and (buff[classtable.TheEmperorsCapacitorBuff].count >19 and not buff[classtable.OrderedElementsBuff].up and IsComboStrike(classtable.CracklingJadeLightning) and talents[classtable.PoweroftheThunderKing]) and cooldown[classtable.CracklingJadeLightning].ready then
         return classtable.CracklingJadeLightning
     end
-    if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick) and talents[classtable.ShadowboxingTreads]) and cooldown[classtable.BlackoutKick].ready then
+    if (CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick) and talents[classtable.ShadowboxingTreads]) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick)) and cooldown[classtable.BlackoutKick].ready then
+    if (CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick)) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.CracklingJadeLightning) and CheckSpellCosts(classtable.CracklingJadeLightning, 'CracklingJadeLightning')) and (buff[classtable.TheEmperorsCapacitorBuff].count >19 and not buff[classtable.OrderedElementsBuff].up and IsComboStrike(classtable.CracklingJadeLightning)) and cooldown[classtable.CracklingJadeLightning].ready then
+    if (CheckSpellCosts(classtable.CracklingJadeLightning, 'CracklingJadeLightning')) and (buff[classtable.TheEmperorsCapacitorBuff].count >19 and not buff[classtable.OrderedElementsBuff].up and IsComboStrike(classtable.CracklingJadeLightning)) and cooldown[classtable.CracklingJadeLightning].ready then
         return classtable.CracklingJadeLightning
     end
-    if (MaxDps:FindSpell(classtable.JadefireStomp) and CheckSpellCosts(classtable.JadefireStomp, 'JadefireStomp')) and cooldown[classtable.JadefireStomp].ready then
+    if (CheckSpellCosts(classtable.JadefireStomp, 'JadefireStomp')) and cooldown[classtable.JadefireStomp].ready then
         return classtable.JadefireStomp
     end
-    if (MaxDps:FindSpell(classtable.TigerPalm) and CheckSpellCosts(classtable.TigerPalm, 'TigerPalm')) and (IsComboStrike(classtable.TigerPalm) and buff[classtable.OrderedElementsBuff].up and ChiDeficit >= 1) and cooldown[classtable.TigerPalm].ready then
+    if (CheckSpellCosts(classtable.TigerPalm, 'TigerPalm')) and (IsComboStrike(classtable.TigerPalm) and buff[classtable.OrderedElementsBuff].up and ChiDeficit >= 1) and cooldown[classtable.TigerPalm].ready then
         return classtable.TigerPalm
     end
 end
 function Windwalker:default_st()
-    if (MaxDps:FindSpell(classtable.TigerPalm) and CheckSpellCosts(classtable.TigerPalm, 'TigerPalm')) and (( Energy >55 and talents[classtable.InnerPeace] or Energy >60 and not talents[classtable.InnerPeace] ) and IsComboStrike(classtable.TigerPalm) and ChiMax - Chi >= 2 and buff[classtable.TeachingsoftheMonasteryBuff].count <4 and not buff[classtable.OrderedElementsBuff].up and ( not (MaxDps.tier and MaxDps.tier[30].count >= 2) or (MaxDps.tier and MaxDps.tier[30].count >= 2) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up and talents[classtable.EnergyBurst] )) and cooldown[classtable.TigerPalm].ready then
+    if (CheckSpellCosts(classtable.TigerPalm, 'TigerPalm')) and (( Energy >55 and talents[classtable.InnerPeace] or Energy >60 and not talents[classtable.InnerPeace] ) and IsComboStrike(classtable.TigerPalm) and ChiMax - Chi >= 2 and buff[classtable.TeachingsoftheMonasteryBuff].count <4 and not buff[classtable.OrderedElementsBuff].up and ( not (MaxDps.tier and MaxDps.tier[30].count >= 2) or (MaxDps.tier and MaxDps.tier[30].count >= 2) and buff[classtable.DanceofChijiBuff].up and not buff[classtable.BlackoutReinforcementBuff].up and talents[classtable.EnergyBurst] )) and cooldown[classtable.TigerPalm].ready then
         return classtable.TigerPalm
     end
-    if (MaxDps:FindSpell(classtable.TouchofDeath) and CheckSpellCosts(classtable.TouchofDeath, 'TouchofDeath')) and cooldown[classtable.TouchofDeath].ready then
+    if (CheckSpellCosts(classtable.TouchofDeath, 'TouchofDeath')) and cooldown[classtable.TouchofDeath].ready then
         return classtable.TouchofDeath
     end
-    if (MaxDps:FindSpell(classtable.CelestialConduit) and CheckSpellCosts(classtable.CelestialConduit, 'CelestialConduit')) and (buff[classtable.StormEarthandFireBuff].up and buff[classtable.OrderedElementsBuff].up and cooldown[classtable.StrikeoftheWindlord].remains) and cooldown[classtable.CelestialConduit].ready then
+    if (CheckSpellCosts(classtable.CelestialConduit, 'CelestialConduit')) and (buff[classtable.StormEarthandFireBuff].up and buff[classtable.OrderedElementsBuff].up and cooldown[classtable.StrikeoftheWindlord].remains) and cooldown[classtable.CelestialConduit].ready then
         return classtable.CelestialConduit
     end
-    if (MaxDps:FindSpell(classtable.RisingSunKick) and CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and (not ( UnitExists('pet') and UnitName('pet')  == 'xuen' ) and CheckPrevSpell(classtable.TigerPalm) or buff[classtable.StormEarthandFireBuff].up and talents[classtable.OrderedElements]) and cooldown[classtable.RisingSunKick].ready then
+    if (CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and (not ( UnitExists('pet') and UnitName('pet')  == 'xuen' ) and CheckPrevSpell(classtable.TigerPalm) or buff[classtable.StormEarthandFireBuff].up and talents[classtable.OrderedElements]) and cooldown[classtable.RisingSunKick].ready then
         return classtable.RisingSunKick
     end
-    if (MaxDps:FindSpell(classtable.StrikeoftheWindlord) and CheckSpellCosts(classtable.StrikeoftheWindlord, 'StrikeoftheWindlord')) and (talents[classtable.GaleForce] and buff[classtable.InvokersDelightBuff].up) and cooldown[classtable.StrikeoftheWindlord].ready then
+    if (CheckSpellCosts(classtable.StrikeoftheWindlord, 'StrikeoftheWindlord')) and (talents[classtable.GaleForce] and buff[classtable.InvokersDelightBuff].up) and cooldown[classtable.StrikeoftheWindlord].ready then
         return classtable.StrikeoftheWindlord
     end
-    if (MaxDps:FindSpell(classtable.FistsofFury) and CheckSpellCosts(classtable.FistsofFury, 'FistsofFury')) and (buff[classtable.PowerInfusionBuff].up and MaxDps:Bloodlust()) and cooldown[classtable.FistsofFury].ready then
+    if (CheckSpellCosts(classtable.FistsofFury, 'FistsofFury')) and (buff[classtable.PowerInfusionBuff].up and MaxDps:Bloodlust()) and cooldown[classtable.FistsofFury].ready then
         return classtable.FistsofFury
     end
-    if (MaxDps:FindSpell(classtable.RisingSunKick) and CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and (buff[classtable.PowerInfusionBuff].up and MaxDps:Bloodlust()) and cooldown[classtable.RisingSunKick].ready then
+    if (CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and (buff[classtable.PowerInfusionBuff].up and MaxDps:Bloodlust()) and cooldown[classtable.RisingSunKick].ready then
         return classtable.RisingSunKick
     end
-    if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (buff[classtable.TeachingsoftheMonasteryBuff].count == 8) and cooldown[classtable.BlackoutKick].ready then
+    if (CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (buff[classtable.TeachingsoftheMonasteryBuff].count == 8) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.WhirlingDragonPunch) and CheckSpellCosts(classtable.WhirlingDragonPunch, 'WhirlingDragonPunch')) and cooldown[classtable.WhirlingDragonPunch].ready then
+    if (CheckSpellCosts(classtable.WhirlingDragonPunch, 'WhirlingDragonPunch')) and cooldown[classtable.WhirlingDragonPunch].ready then
         return classtable.WhirlingDragonPunch
     end
-    if (MaxDps:FindSpell(classtable.StrikeoftheWindlord) and CheckSpellCosts(classtable.StrikeoftheWindlord, 'StrikeoftheWindlord')) and (timeInCombat >5) and cooldown[classtable.StrikeoftheWindlord].ready then
+    if (CheckSpellCosts(classtable.StrikeoftheWindlord, 'StrikeoftheWindlord')) and (timeInCombat >5) and cooldown[classtable.StrikeoftheWindlord].ready then
         return classtable.StrikeoftheWindlord
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and (MaxDps.tier and MaxDps.tier[30].count >= 2) and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
+    if (CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and (MaxDps.tier and MaxDps.tier[30].count >= 2) and not buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
-    if (MaxDps:FindSpell(classtable.RisingSunKick) and CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and cooldown[classtable.RisingSunKick].ready then
+    if (CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and cooldown[classtable.RisingSunKick].ready then
         return classtable.RisingSunKick
     end
-    if (MaxDps:FindSpell(classtable.FistsofFury) and CheckSpellCosts(classtable.FistsofFury, 'FistsofFury')) and (buff[classtable.OrderedElementsBuff].remains >timeShift or not buff[classtable.OrderedElementsBuff].up or buff[classtable.OrderedElementsBuff].remains <= gcd) and cooldown[classtable.FistsofFury].ready then
+    if (CheckSpellCosts(classtable.FistsofFury, 'FistsofFury')) and (buff[classtable.OrderedElementsBuff].remains >timeShift or not buff[classtable.OrderedElementsBuff].up or buff[classtable.OrderedElementsBuff].remains <= gcd) and cooldown[classtable.FistsofFury].ready then
         return classtable.FistsofFury
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and (MaxDps.tier and MaxDps.tier[30].count >= 2) and not buff[classtable.BlackoutReinforcementBuff].up and talents[classtable.EnergyBurst]) and cooldown[classtable.SpinningCraneKick].ready then
+    if (CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and (MaxDps.tier and MaxDps.tier[30].count >= 2) and not buff[classtable.BlackoutReinforcementBuff].up and talents[classtable.EnergyBurst]) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
-    if (MaxDps:FindSpell(classtable.TigerPalm) and CheckSpellCosts(classtable.TigerPalm, 'TigerPalm')) and (IsComboStrike(classtable.TigerPalm) and ChiDeficit >= 2 and ( not buff[classtable.OrderedElementsBuff].up or EnergyTimeToMax <= gcd * 3 )) and cooldown[classtable.TigerPalm].ready then
+    if (CheckSpellCosts(classtable.TigerPalm, 'TigerPalm')) and (IsComboStrike(classtable.TigerPalm) and ChiDeficit >= 2 and ( not buff[classtable.OrderedElementsBuff].up or EnergyTimeToMax <= gcd * 3 )) and cooldown[classtable.TigerPalm].ready then
         return classtable.TigerPalm
     end
-    if (MaxDps:FindSpell(classtable.JadefireStomp) and CheckSpellCosts(classtable.JadefireStomp, 'JadefireStomp')) and (talents[classtable.SingularlyFocusedJade] or talents[classtable.JadefireHarmony]) and cooldown[classtable.JadefireStomp].ready then
+    if (CheckSpellCosts(classtable.JadefireStomp, 'JadefireStomp')) and (talents[classtable.SingularlyFocusedJade] or talents[classtable.JadefireHarmony]) and cooldown[classtable.JadefireStomp].ready then
         return classtable.JadefireStomp
     end
-    if (MaxDps:FindSpell(classtable.RisingSunKick) and CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and cooldown[classtable.RisingSunKick].ready then
+    if (CheckSpellCosts(classtable.RisingSunKick, 'RisingSunKick')) and cooldown[classtable.RisingSunKick].ready then
         return classtable.RisingSunKick
     end
-    if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick) and buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.BlackoutKick].ready then
+    if (CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick) and buff[classtable.BlackoutReinforcementBuff].up) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.ChiBurst) and CheckSpellCosts(classtable.ChiBurst, 'ChiBurst')) and (not buff[classtable.OrderedElementsBuff].up) and cooldown[classtable.ChiBurst].ready then
+    if (CheckSpellCosts(classtable.ChiBurst, 'ChiBurst')) and (not buff[classtable.OrderedElementsBuff].up) and cooldown[classtable.ChiBurst].ready then
         return classtable.ChiBurst
     end
-    if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick) and ( buff[classtable.OrderedElementsBuff].up or buff[classtable.BokProcBuff].up and ChiDeficit >= 1 and talents[classtable.EnergyBurst] )) and cooldown[classtable.BlackoutKick].ready then
+    if (CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick) and ( buff[classtable.OrderedElementsBuff].up or buff[classtable.BokProcBuff].up and ChiDeficit >= 1 and talents[classtable.EnergyBurst] )) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and ( buff[classtable.OrderedElementsBuff].up or EnergyTimeToMax >= gcd * 3 and talents[classtable.SequencedStrikes] and talents[classtable.EnergyBurst] or not talents[classtable.SequencedStrikes] or not talents[classtable.EnergyBurst] or buff[classtable.DanceofChijiBuff].count == 2 or buff[classtable.DanceofChijiBuff].remains <= gcd * 3 )) and cooldown[classtable.SpinningCraneKick].ready then
+    if (CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.DanceofChijiBuff].up and ( buff[classtable.OrderedElementsBuff].up or EnergyTimeToMax >= gcd * 3 and talents[classtable.SequencedStrikes] and talents[classtable.EnergyBurst] or not talents[classtable.SequencedStrikes] or not talents[classtable.EnergyBurst] or buff[classtable.DanceofChijiBuff].count == 2 or buff[classtable.DanceofChijiBuff].remains <= gcd * 3 )) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
-    if (MaxDps:FindSpell(classtable.CracklingJadeLightning) and CheckSpellCosts(classtable.CracklingJadeLightning, 'CracklingJadeLightning')) and (buff[classtable.TheEmperorsCapacitorBuff].count >19 and not buff[classtable.OrderedElementsBuff].up and IsComboStrike(classtable.CracklingJadeLightning)) and cooldown[classtable.CracklingJadeLightning].ready then
+    if (CheckSpellCosts(classtable.CracklingJadeLightning, 'CracklingJadeLightning')) and (buff[classtable.TheEmperorsCapacitorBuff].count >19 and not buff[classtable.OrderedElementsBuff].up and IsComboStrike(classtable.CracklingJadeLightning)) and cooldown[classtable.CracklingJadeLightning].ready then
         return classtable.CracklingJadeLightning
     end
-    if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick)) and cooldown[classtable.BlackoutKick].ready then
+    if (CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (IsComboStrike(classtable.BlackoutKick)) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
-    if (MaxDps:FindSpell(classtable.JadefireStomp) and CheckSpellCosts(classtable.JadefireStomp, 'JadefireStomp')) and cooldown[classtable.JadefireStomp].ready then
+    if (CheckSpellCosts(classtable.JadefireStomp, 'JadefireStomp')) and cooldown[classtable.JadefireStomp].ready then
         return classtable.JadefireStomp
     end
-    if (MaxDps:FindSpell(classtable.TigerPalm) and CheckSpellCosts(classtable.TigerPalm, 'TigerPalm')) and (IsComboStrike(classtable.TigerPalm) and buff[classtable.OrderedElementsBuff].up and ChiDeficit >= 1) and cooldown[classtable.TigerPalm].ready then
+    if (CheckSpellCosts(classtable.TigerPalm, 'TigerPalm')) and (IsComboStrike(classtable.TigerPalm) and buff[classtable.OrderedElementsBuff].up and ChiDeficit >= 1) and cooldown[classtable.TigerPalm].ready then
         return classtable.TigerPalm
     end
-    if (MaxDps:FindSpell(classtable.ChiBurst) and CheckSpellCosts(classtable.ChiBurst, 'ChiBurst')) and cooldown[classtable.ChiBurst].ready then
+    if (CheckSpellCosts(classtable.ChiBurst, 'ChiBurst')) and cooldown[classtable.ChiBurst].ready then
         return classtable.ChiBurst
     end
-    if (MaxDps:FindSpell(classtable.SpinningCraneKick) and CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.OrderedElementsBuff].up and talents[classtable.HitCombo]) and cooldown[classtable.SpinningCraneKick].ready then
+    if (CheckSpellCosts(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (IsComboStrike(classtable.SpinningCraneKick) and buff[classtable.OrderedElementsBuff].up and talents[classtable.HitCombo]) and cooldown[classtable.SpinningCraneKick].ready then
         return classtable.SpinningCraneKick
     end
-    if (MaxDps:FindSpell(classtable.BlackoutKick) and CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (buff[classtable.OrderedElementsBuff].up and not talents[classtable.HitCombo]) and cooldown[classtable.BlackoutKick].ready then
+    if (CheckSpellCosts(classtable.BlackoutKick, 'BlackoutKick')) and (buff[classtable.OrderedElementsBuff].up and not talents[classtable.HitCombo]) and cooldown[classtable.BlackoutKick].ready then
         return classtable.BlackoutKick
     end
 end
 
 function Windwalker:callaction()
-    if (MaxDps:FindSpell(classtable.SpearHandStrike) and CheckSpellCosts(classtable.SpearHandStrike, 'SpearHandStrike')) and (UnitCastingInfo('target') and select(8,UnitCastingInfo('target')) == false) and cooldown[classtable.SpearHandStrike].ready then
+    if (CheckSpellCosts(classtable.SpearHandStrike, 'SpearHandStrike')) and (UnitCastingInfo('target') and select(8,UnitCastingInfo('target')) == false) and cooldown[classtable.SpearHandStrike].ready then
         MaxDps:GlowCooldown(classtable.SpearHandStrike, ( select(8,UnitCastingInfo('target')) ~= nil and not select(8,UnitCastingInfo('target')) or select(7,UnitChannelInfo('target')) ~= nil and not select(7,UnitChannelInfo('target'))) )
     end
     local trinketsCheck = Windwalker:trinkets()
