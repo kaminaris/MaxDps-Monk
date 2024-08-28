@@ -117,9 +117,6 @@ function Brewmaster:rotation_pta()
     if (MaxDps:CheckSpellUsable(classtable.BreathofFire, 'BreathofFire')) and (buff[classtable.CharredPassionsBuff].remains <cooldown[classtable.BlackoutKick].remains and ( buff[classtable.BlackoutComboBuff].up or not talents[classtable.BlackoutCombo] )) and cooldown[classtable.BreathofFire].ready then
         return classtable.BreathofFire
     end
-    if (MaxDps:CheckSpellUsable(classtable.BonedustBrew, 'BonedustBrew')) and cooldown[classtable.BonedustBrew].ready then
-        return classtable.BonedustBrew
-    end
     if (MaxDps:CheckSpellUsable(classtable.ExplodingKeg, 'ExplodingKeg')) and (( ( buff[classtable.BonedustBrewBuff].up ) or ( cooldown[classtable.BonedustBrew].remains >= 20 ) )) and cooldown[classtable.ExplodingKeg].ready then
         return classtable.ExplodingKeg
     end
@@ -184,12 +181,6 @@ function Brewmaster:rotation_boc()
     end
     if (MaxDps:CheckSpellUsable(classtable.KegSmash, 'KegSmash')) and (( buff[classtable.WeaponsofOrderBuff].up and debuff[classtable.WeaponsofOrderDebuffDeBuff].count <= 3 )) and cooldown[classtable.KegSmash].ready then
         return classtable.KegSmash
-    end
-    if (MaxDps:CheckSpellUsable(classtable.BonedustBrew, 'BonedustBrew')) and (( timeInCombat <10 and debuff[classtable.WeaponsofOrderDebuffDeBuff].count >3 ) or ( timeInCombat >10 and talents[classtable.WeaponsofOrder] )) and cooldown[classtable.BonedustBrew].ready then
-        return classtable.BonedustBrew
-    end
-    if (MaxDps:CheckSpellUsable(classtable.BonedustBrew, 'BonedustBrew')) and (( not talents[classtable.WeaponsofOrder] )) and cooldown[classtable.BonedustBrew].ready then
-        return classtable.BonedustBrew
     end
     if (MaxDps:CheckSpellUsable(classtable.ExplodingKeg, 'ExplodingKeg')) and (( buff[classtable.BonedustBrewBuff].up )) and cooldown[classtable.ExplodingKeg].ready then
         return classtable.ExplodingKeg
