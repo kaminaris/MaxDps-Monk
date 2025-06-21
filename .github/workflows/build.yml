@@ -28,3 +28,8 @@ jobs:
         uses: BigWigsMods/packager@master
         with:
             args: -g retail
+
+      - name: Package MoP Classic
+        uses: BigWigsMods/packager@master
+        with:
+            args: -g mists

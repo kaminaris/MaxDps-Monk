@@ -7,6 +7,7 @@
 ## Interface-BCC: 20504
 ## Interface-Wrath: 30403
 ## Interface-Cata: 40402
+## Interface-Mists: 50501
 ## Dependencies: MaxDps
 ## LoadOnDemand: 1
 ## X-Curse-Project-ID: 255355
@@ -14,6 +15,12 @@
 ## X-Wago-ID: vNAe5ONo
 
 Main.lua
+#@retail@
 Specialization\Brewmaster.lua
 Specialization\Mistweaver.lua
 Specialization\Windwalker.lua
+#@end-retail@
+
+#@version-mists@
+Specialization\Mop\Windwalker.lua
+#@end-version-mists@
