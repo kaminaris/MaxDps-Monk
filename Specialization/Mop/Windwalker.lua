@@ -242,6 +242,14 @@ function Monk:Windwalker()
     --    self:ClearGlowIndependent(spellId, spellId)
     --end
 
+    classtable.RisingSunKickDeBuff = 130320
+    classtable.TigerPowerBuff = 125359
+    classtable.TigereyeBrewBuff = 1247275
+    classtable.TigereyeBrewUseBuff = 1247279
+
+    classtable.ChiSphere = 124081
+    classtable.InvokeXuen = 123904
+
     local function debugg()
         talents[classtable.PowerStrikes] = 1
         talents[classtable.ChiBrew] = 1
