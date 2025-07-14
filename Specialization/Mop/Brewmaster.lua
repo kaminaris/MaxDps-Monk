@@ -144,6 +144,7 @@ function Monk:Brewmaster()
     EnergyDeficit = EnergyMax - Energy
     EnergyRegen = GetPowerRegenForPowerType(Enum.PowerType.Energy)
     EnergyTimeToMax = EnergyDeficit / EnergyRegen
+    classtable = MaxDps.SpellTable
 
     classtable.BlackoutKick = 100784
     classtable.ExpelHarm = 115072
