@@ -65,7 +65,7 @@ function Brewmaster:single()
     if (MaxDps:CheckSpellUsable(classtable.ExpelHarm, 'ExpelHarm')) and buff[classtable.DesperateMeasuresBuff].up and cooldown[classtable.ExpelHarm].ready then
         if not setSpell then setSpell = classtable.ExpelHarm end
     end
-    if (MaxDps:CheckSpellUsable(classtable.TouchOfDeath, 'TouchOfDeath')) and cooldown[classtable.TouchOfDeath].ready then
+    if (MaxDps:CheckSpellUsable(classtable.TouchOfDeath, 'TouchOfDeath')) and (targetHP <= curentHP) and cooldown[classtable.TouchOfDeath].ready then
         if not setSpell then setSpell = classtable.TouchOfDeath end
     end
     if (MaxDps:CheckSpellUsable(classtable.KegSmash, 'KegSmash')) and (Chi < 4) and cooldown[classtable.KegSmash].ready then
@@ -93,7 +93,7 @@ function Brewmaster:aoe()
     if (MaxDps:CheckSpellUsable(classtable.ExpelHarm, 'ExpelHarm')) and buff[classtable.DesperateMeasuresBuff].up and cooldown[classtable.ExpelHarm].ready then
         if not setSpell then setSpell = classtable.ExpelHarm end
     end
-    if (MaxDps:CheckSpellUsable(classtable.TouchOfDeath, 'TouchOfDeath')) and cooldown[classtable.TouchOfDeath].ready then
+    if (MaxDps:CheckSpellUsable(classtable.TouchOfDeath, 'TouchOfDeath')) and (targetHP <= curentHP) and cooldown[classtable.TouchOfDeath].ready then
         if not setSpell then setSpell = classtable.TouchOfDeath end
     end
     if (MaxDps:CheckSpellUsable(classtable.KegSmash, 'KegSmash')) and (Chi < 4) and cooldown[classtable.KegSmash].ready then
@@ -120,6 +120,9 @@ function Brewmaster:aoe()
 end
 
 function Brewmaster:callaction()
+    if (MaxDps:CheckSpellUsable(classtable.StanceoftheSturdyOx, 'StanceoftheSturdyOx')) and (not buff[classtable.StanceoftheSturdyOxBuff].up) and cooldown[classtable.StanceoftheSturdyOx].ready then
+        if not setSpell then setSpell = classtable.StanceoftheSturdyOx end
+    end
     if targets > 1 then
         Brewmaster:aoe()
     end
@@ -144,6 +147,12 @@ function Monk:Brewmaster()
     EnergyDeficit = EnergyMax - Energy
     EnergyRegen = GetPowerRegenForPowerType(Enum.PowerType.Energy)
     EnergyTimeToMax = EnergyDeficit / EnergyRegen
+    targetHP = UnitHealth('target')
+    targetmaxHP = UnitHealthMax('target')
+    targethealthPerc = (targetHP / targetmaxHP) * 100
+    curentHP = UnitHealth('player')
+    maxHP = UnitHealthMax('player')
+
     classtable = MaxDps.SpellTable
 
     classtable.BlackoutKick = 100784
@@ -158,6 +167,7 @@ function Monk:Brewmaster()
     classtable.BreathOfFire = 115181
     classtable.ShuffleBuff = 115307
     classtable.DesperateMeasuresBuff = 126119
+    classtable.StanceoftheSturdyOxBuff = 126119
 
     setSpell = nil
     Brewmaster:precombat()
