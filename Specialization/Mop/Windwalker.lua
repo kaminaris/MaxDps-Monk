@@ -163,6 +163,7 @@ end
 
 local function ClearCDs()
     MaxDps:GlowCooldown(classtable.ChiBurst, false)
+    MaxDps:GlowCooldown(classtable.EnergizingBrew, false)
 end
 
 function Windwalker:callaction()
@@ -188,7 +189,8 @@ function Windwalker:callaction()
         if not setSpell then setSpell = classtable.TigereyeBrew end
     end
     if (MaxDps:CheckSpellUsable(classtable.EnergizingBrew, 'EnergizingBrew')) and (EnergyTimeToMax >5) and cooldown[classtable.EnergizingBrew].ready then
-        if not setSpell then setSpell = classtable.EnergizingBrew end
+        --if not setSpell then setSpell = classtable.EnergizingBrew end
+        MaxDps:GlowCooldown(classtable.EnergizingBrew, true)
     end
     if (MaxDps:CheckSpellUsable(classtable.RisingSunKick, 'RisingSunKick')) and (not debuff[classtable.RisingSunKickDeBuff].up) and cooldown[classtable.RisingSunKick].ready then
         if not setSpell then setSpell = classtable.RisingSunKick end
@@ -244,8 +246,8 @@ function Monk:Windwalker()
 
     classtable.RisingSunKickDeBuff = 130320
     classtable.TigerPowerBuff = 125359
-    classtable.TigereyeBrewBuff = 1247275
-    classtable.TigereyeBrewUseBuff = 1247279
+    classtable.TigereyeBrewBuff = 1247279
+    classtable.TigereyeBrewUseBuff = 1247275
 
     classtable.ChiSphere = 124081
     classtable.InvokeXuen = 123904
