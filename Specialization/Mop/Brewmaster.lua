@@ -49,6 +49,8 @@ local EnergyDeficit
 local EnergyRegen
 local EnergyTimeToMax
 
+local stance
+
 local Brewmaster = {}
 
 function Brewmaster:precombat()
@@ -120,9 +122,12 @@ function Brewmaster:aoe()
 end
 
 function Brewmaster:callaction()
-    if (MaxDps:CheckSpellUsable(classtable.StanceoftheSturdyOx, 'StanceoftheSturdyOx')) and (not buff[classtable.StanceoftheSturdyOxBuff].up) and cooldown[classtable.StanceoftheSturdyOx].ready then
+    if (MaxDps:CheckSpellUsable(classtable.StanceoftheSturdyOx, 'StanceoftheSturdyOx')) and (stance ~= 1) and cooldown[classtable.StanceoftheSturdyOx].ready then
         if not setSpell then setSpell = classtable.StanceoftheSturdyOx end
     end
+    --if (MaxDps:CheckSpellUsable(classtable.StanceoftheSturdyOx, 'StanceoftheSturdyOx')) and (not buff[classtable.StanceoftheSturdyOxBuff].up) and cooldown[classtable.StanceoftheSturdyOx].ready then
+    --    if not setSpell then setSpell = classtable.StanceoftheSturdyOx end
+    --end
     if targets > 1 then
         Brewmaster:aoe()
     end
@@ -152,6 +157,7 @@ function Monk:Brewmaster()
     targethealthPerc = (targetHP / targetmaxHP) * 100
     curentHP = UnitHealth('player')
     maxHP = UnitHealthMax('player')
+    stance = GetShapeshiftFormID()
 
     classtable = MaxDps.SpellTable
 
