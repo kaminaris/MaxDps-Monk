@@ -71,6 +71,8 @@ local Mana
 local ManaMax
 local ManaDeficit
 
+local stance
+
 local Windwalker = {}
 
 
@@ -245,6 +247,7 @@ function Monk:Windwalker()
     EnergyDeficit = EnergyMax - Energy
     EnergyRegen = GetPowerRegenForPowerType(Enum.PowerType.Energy)
     EnergyTimeToMax = EnergyDeficit / EnergyRegen
+    stance = GetShapeshiftFormID()
     --for spellId in pairs(MaxDps.Flags) do
     --    self.Flags[spellId] = false
     --    self:ClearGlowIndependent(spellId, spellId)
