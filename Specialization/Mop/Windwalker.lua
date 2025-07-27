@@ -167,6 +167,12 @@ local function ClearCDs()
 end
 
 function Windwalker:callaction()
+    if (MaxDps:CheckSpellUsable(classtable.StanceoftheFierceTiger, 'StanceoftheFierceTiger')) and (stance ~= 1) and cooldown[classtable.StanceoftheFierceTiger].ready then
+        if not setSpell then setSpell = classtable.StanceoftheFierceTiger end
+    end
+    --if (MaxDps:CheckSpellUsable(classtable.StanceoftheFierceTiger, 'StanceoftheFierceTiger')) and (not buff[classtable.StanceoftheFierceTigerBuff].up) and cooldown[classtable.StanceoftheFierceTiger].ready then
+    --    if not setSpell then setSpell = classtable.StanceoftheFierceTiger end
+    --end
     if (MaxDps:CheckSpellUsable(classtable.ChiSphere, 'ChiSphere')) and ((talents[classtable.PowerStrikes] and true or false) and buff[classtable.ChiSphereBuff].up and Chi <4) and cooldown[classtable.ChiSphere].ready then
         if not setSpell then setSpell = classtable.ChiSphere end
     end
@@ -245,6 +251,7 @@ function Monk:Windwalker()
     --end
 
     classtable.RisingSunKickDeBuff = 130320
+    classtable.StanceoftheFierceTiger = 103985
     classtable.TigerPowerBuff = 125359
     classtable.TigereyeBrewBuff = 1247279
     classtable.TigereyeBrewUseBuff = 1247275
