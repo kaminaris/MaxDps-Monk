@@ -167,7 +167,7 @@ local function ClearCDs()
 end
 
 function Windwalker:callaction()
-    if (MaxDps:CheckSpellUsable(classtable.StanceoftheFierceTiger, 'StanceoftheFierceTiger')) and (stance ~= 1) and cooldown[classtable.StanceoftheFierceTiger].ready then
+    if (MaxDps:CheckSpellUsable(classtable.StanceoftheFierceTiger, 'StanceoftheFierceTiger')) and (stance ~= 24) and cooldown[classtable.StanceoftheFierceTiger].ready then
         if not setSpell then setSpell = classtable.StanceoftheFierceTiger end
     end
     --if (MaxDps:CheckSpellUsable(classtable.StanceoftheFierceTiger, 'StanceoftheFierceTiger')) and (not buff[classtable.StanceoftheFierceTigerBuff].up) and cooldown[classtable.StanceoftheFierceTiger].ready then
