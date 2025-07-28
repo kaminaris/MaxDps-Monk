@@ -190,10 +190,10 @@ function Windwalker:callaction()
     if (MaxDps:CheckSpellUsable(classtable.TigereyeBrew, 'TigereyeBrew')) and (not buff[classtable.TigereyeBrewUseBuff].up and buff[classtable.TigereyeBrewBuff].count == 20) and cooldown[classtable.TigereyeBrew].ready then
         if not setSpell then setSpell = classtable.TigereyeBrew end
     end
-    if (MaxDps:CheckSpellUsable(classtable.TigereyeBrew, 'TigereyeBrew')) and (not buff[classtable.TigereyeBrewUseBuff].up) and cooldown[classtable.TigereyeBrew].ready then
-        if not setSpell then setSpell = classtable.TigereyeBrew end
-    end
-    if (MaxDps:CheckSpellUsable(classtable.TigereyeBrew, 'TigereyeBrew')) and (not buff[classtable.TigereyeBrewUseBuff].up and Chi >= 2 and ( buff[classtable.TigereyeBrewBuff].count >= 15 or ttd <40 ) and debuff[classtable.RisingSunKickDeBuff].up and buff[classtable.TigerPowerBuff].up) and cooldown[classtable.TigereyeBrew].ready then
+    --if (MaxDps:CheckSpellUsable(classtable.TigereyeBrew, 'TigereyeBrew')) and (not buff[classtable.TigereyeBrewUseBuff].up) and cooldown[classtable.TigereyeBrew].ready then
+    --    if not setSpell then setSpell = classtable.TigereyeBrew end
+    --end
+    if (MaxDps:CheckSpellUsable(classtable.TigereyeBrew, 'TigereyeBrew')) and (not buff[classtable.TigereyeBrewUseBuff].up and Chi >= 2 and ( buff[classtable.TigereyeBrewBuff].count >= 10 or ttd <40 ) and debuff[classtable.RisingSunKickDeBuff].up and buff[classtable.TigerPowerBuff].up) and cooldown[classtable.TigereyeBrew].ready then
         if not setSpell then setSpell = classtable.TigereyeBrew end
     end
     if (MaxDps:CheckSpellUsable(classtable.EnergizingBrew, 'EnergizingBrew')) and (EnergyTimeToMax >5) and cooldown[classtable.EnergizingBrew].ready then
