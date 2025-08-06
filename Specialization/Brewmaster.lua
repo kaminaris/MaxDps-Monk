@@ -2,7 +2,29 @@ local _, addonTable = ...
 local Monk = addonTable.Monk
 local MaxDps = _G.MaxDps
 if not MaxDps then return end
+local LibStub = LibStub
+local setSpell
 
+local ceil = ceil
+local floor = floor
+local fmod = fmod
+local format = format
+local max = max
+local min = min
+local pairs = pairs
+local select = select
+local strsplit = strsplit
+local GetTime = GetTime
+
+local UnitAffectingCombat = UnitAffectingCombat
+local UnitCastingInfo = UnitCastingInfo
+local UnitChannelInfo = UnitChannelInfo
+local UnitClass = UnitClass
+local UnitExists = UnitExists
+local UnitGUID = UnitGUID
+local UnitName = UnitName
+local UnitSpellHaste = UnitSpellHaste
+local UnitThreatSituation = UnitThreatSituation
 local UnitPower = UnitPower
 local UnitHealth = UnitHealth
 local UnitAura = C_UnitAuras.GetAuraDataByIndex
@@ -13,7 +35,19 @@ local SpellHaste
 local SpellCrit
 local GetSpellInfo = C_Spell.GetSpellInfo
 local GetSpellCooldown = C_Spell.GetSpellCooldown
-local GetSpellCount = C_Spell.GetSpellCastCount
+local GetSpellCastCount = C_Spell.GetSpellCastCount
+local GetUnitSpeed = GetUnitSpeed
+local GetCritChance = GetCritChance
+local GetInventoryItemLink = GetInventoryItemLink
+local GetItemInfo = C_Item.GetItemInfo
+local GetItemSpell = C_Item.GetItemSpell
+local GetNamePlates = C_NamePlate.GetNamePlates and C_NamePlate.GetNamePlates or GetNamePlates
+local GetPowerRegenForPowerType = GetPowerRegenForPowerType
+local GetSpellName = C_Spell and C_Spell.GetSpellName and C_Spell.GetSpellName or GetSpellInfo
+local GetTotemInfo = GetTotemInfo
+local IsStealthed = IsStealthed
+local IsCurrentSpell = C_Spell and C_Spell.IsCurrentSpell
+local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
 
 local ManaPT = Enum.PowerType.Mana
 local RagePT = Enum.PowerType.Rage
@@ -23,6 +57,8 @@ local ComboPointsPT = Enum.PowerType.ComboPoints
 local RunesPT = Enum.PowerType.Runes
 local RunicPowerPT = Enum.PowerType.RunicPower
 local SoulShardsPT = Enum.PowerType.SoulShards
+local DemonicFuryPT = Enum.PowerType.DemonicFury
+local BurningEmbersPT = Enum.PowerType.BurningEmbers
 local LunarPowerPT = Enum.PowerType.LunarPower
 local HolyPowerPT = Enum.PowerType.HolyPower
 local MaelstromPT = Enum.PowerType.Maelstrom
@@ -53,27 +89,84 @@ local maxHP
 local healthPerc
 local timeInCombat
 local className, classFilename, classId = UnitClass('player')
-local currentSpec = GetSpecialization()
-local currentSpecName = currentSpec and select(2, GetSpecializationInfo(currentSpec)) or 'None'
 local classtable
 local LibRangeCheck = LibStub('LibRangeCheck-3.0', true)
 
-local Chi
-local ChiMax
-local ChiDeficit
 local Energy
 local EnergyMax
 local EnergyDeficit
+local EnergyPerc
 local EnergyRegen
+local EnergyRegenCombined
 local EnergyTimeToMax
+local Chi
+local ChiMax
+local ChiDeficit
+local ChiPerc
+local ChiRegen
+local ChiRegenCombined
+local ChiTimeToMax
 local Mana
 local ManaMax
 local ManaDeficit
+local ManaPerc
+local ManaRegen
+local ManaRegenCombined
+local ManaTimeToMax
 local staggerAmount
 local staggerPercent
 local WoOLastUsed
 
 local Brewmaster = {}
+
+
+
+local function GetTotemInfoByName(name)
+    local info = {
+        duration = 0,
+        remains = 0,
+        up = false,
+    }
+    for index=1,MAX_TOTEMS do
+        local arg1, totemName, startTime, duration, icon = GetTotemInfo(index)
+        local remains = math.floor(startTime+duration-GetTime())
+        if (totemName == name ) then
+            info.duration = duration
+            info.up = true
+            info.remains = remains
+            break
+        end
+    end
+    return info
+end
+
+local function GetTotemInfoById(sSpellID)
+    local info = {
+        duration = 0,
+        remains = 0,
+        up = false,
+    }
+    for index=1,MAX_TOTEMS do
+        local arg1, totemName, startTime, duration, icon, modRate, spellID = GetTotemInfo(index)
+        local sName = sSpellID and GetSpellInfo(sSpellID).name or ''
+        local remains = math.floor(startTime+duration-GetTime())
+        if (spellID == sSpellID) or (totemName == sName ) then
+            info.duration = duration
+            info.up = true
+            info.remains = remains
+            break
+        end
+    end
+    return info
+end
+
+local function GetTotemTypeActive(i)
+   local arg1, totemName, startTime, duration, icon = GetTotemInfo(i)
+   return duration > 0
+end
+
+
+
 
 local function twoh_check()
    local leftwep = GetInventoryItemLink('player',16)
@@ -85,130 +178,43 @@ local function twoh_check()
    end
 end
 
+
+local function IsComboStrike(spell)
+    if MaxDps and MaxDps.spellHistory then
+        if MaxDps.spellHistory[1] then
+            if MaxDps.spellHistory[1] ~= spell then
+                return true
+            end
+            if MaxDps.spellHistory[1] == spell then
+                return false
+            end
+        end
+    end
+    return true
+end
+
+
+
 function Brewmaster:precombat()
-    if (MaxDps:CheckSpellUsable(classtable.ChiBurst, 'ChiBurst')) and (talents[classtable.ChiBurst]) and cooldown[classtable.ChiBurst].ready then
-        return classtable.ChiBurst
+    if (MaxDps:CheckSpellUsable(classtable.ChiBurst, 'ChiBurst') and talents[classtable.ChiBurst]) and ((talents[classtable.ChiBurst] and true or false)) and cooldown[classtable.ChiBurst].ready and not UnitAffectingCombat('player') then
+        MaxDps:GlowCooldown(classtable.ChiBurst, cooldown[classtable.ChiBurst].ready)
     end
 end
-function Brewmaster:items()
-end
-function Brewmaster:rotation_pta()
-    if (MaxDps:CheckSpellUsable(classtable.InvokeNiuzaotheBlackOx, 'InvokeNiuzaotheBlackOx')) and cooldown[classtable.InvokeNiuzaotheBlackOx].ready then
-        MaxDps:GlowCooldown(classtable.InvokeNiuzaotheBlackOx, cooldown[classtable.InvokeNiuzaotheBlackOx].ready)
-    end
-    if (MaxDps:CheckSpellUsable(classtable.RisingSunKick, 'RisingSunKick')) and (buff[classtable.PresstheAdvantageBuff].count <( 7 + (twoh_check() == true and 2 or 1) )) and cooldown[classtable.RisingSunKick].ready then
-        return classtable.RisingSunKick
-    end
-    if (MaxDps:CheckSpellUsable(classtable.RisingSunKick, 'RisingSunKick')) and (buff[classtable.PresstheAdvantageBuff].count >9 and targets <= 3 and ( buff[classtable.BlackoutComboBuff].up or not talents[classtable.BlackoutCombo] )) and cooldown[classtable.RisingSunKick].ready then
-        return classtable.RisingSunKick
-    end
-    if (MaxDps:CheckSpellUsable(classtable.KegSmash, 'KegSmash')) and (( buff[classtable.PresstheAdvantageBuff].count >9 ) and targets >3) and cooldown[classtable.KegSmash].ready then
-        return classtable.KegSmash
-    end
-    if (MaxDps:CheckSpellUsable(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (targets >5 and buff[classtable.ExplodingKegBuff].up and buff[classtable.CharredPassionsBuff].up) and cooldown[classtable.SpinningCraneKick].ready then
-        return classtable.SpinningCraneKick
-    end
-    if (MaxDps:CheckSpellUsable(classtable.BlackoutKick, 'BlackoutKick')) and cooldown[classtable.BlackoutKick].ready then
-        return classtable.BlackoutKick
-    end
-    if (MaxDps:CheckSpellUsable(classtable.BlackOxBrew, 'BlackOxBrew')) and (Energy + EnergyRegen <= 40) and cooldown[classtable.BlackOxBrew].ready then
-        return classtable.BlackOxBrew
-    end
-    if (MaxDps:CheckSpellUsable(classtable.BreathofFire, 'BreathofFire')) and (buff[classtable.CharredPassionsBuff].remains <cooldown[classtable.BlackoutKick].remains and ( buff[classtable.BlackoutComboBuff].up or not talents[classtable.BlackoutCombo] )) and cooldown[classtable.BreathofFire].ready then
-        return classtable.BreathofFire
-    end
-    if (MaxDps:CheckSpellUsable(classtable.ExplodingKeg, 'ExplodingKeg')) and (( ( buff[classtable.BonedustBrewBuff].up ) or ( cooldown[classtable.BonedustBrew].remains >= 20 ) )) and cooldown[classtable.ExplodingKeg].ready then
-        return classtable.ExplodingKeg
-    end
-    if (MaxDps:CheckSpellUsable(classtable.ExplodingKeg, 'ExplodingKeg')) and (( not talents[classtable.BonedustBrew] )) and cooldown[classtable.ExplodingKeg].ready then
-        return classtable.ExplodingKeg
-    end
-    if (MaxDps:CheckSpellUsable(classtable.BreathofFire, 'BreathofFire')) and (( buff[classtable.BlackoutComboBuff].up or not talents[classtable.BlackoutCombo] )) and cooldown[classtable.BreathofFire].ready then
-        return classtable.BreathofFire
-    end
-    if (MaxDps:CheckSpellUsable(classtable.KegSmash, 'KegSmash')) and (buff[classtable.PresstheAdvantageBuff].count <10) and cooldown[classtable.KegSmash].ready then
-        return classtable.KegSmash
-    end
-    if (MaxDps:CheckSpellUsable(classtable.RushingJadeWind, 'RushingJadeWind')) and (talents[classtable.RushingJadeWind]) and cooldown[classtable.RushingJadeWind].ready then
-        return classtable.RushingJadeWind
-    end
-    if (MaxDps:CheckSpellUsable(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (targets >2) and cooldown[classtable.SpinningCraneKick].ready then
-        return classtable.SpinningCraneKick
-    end
-    if (MaxDps:CheckSpellUsable(classtable.ChiBurst, 'ChiBurst')) and cooldown[classtable.ChiBurst].ready then
-        return classtable.ChiBurst
-    end
-end
-function Brewmaster:rotation_boc()
-    if (MaxDps:CheckSpellUsable(classtable.BlackoutKick, 'BlackoutKick')) and cooldown[classtable.BlackoutKick].ready then
-        return classtable.BlackoutKick
-    end
-    if (MaxDps:CheckSpellUsable(classtable.WeaponsofOrder, 'WeaponsofOrder')) and (( buff[classtable.RecentPurifiesBuff].up ) and talents[classtable.ImprovedInvokeNiuzaotheBlackOx]) and cooldown[classtable.WeaponsofOrder].ready then
-        MaxDps:GlowCooldown(classtable.WeaponsofOrder, cooldown[classtable.WeaponsofOrder].ready)
-    end
-    if (MaxDps:CheckSpellUsable(classtable.InvokeNiuzaotheBlackOx, 'InvokeNiuzaotheBlackOx')) and (( not buff[classtable.InvokeNiuzaotheBlackOxBuff].up and buff[classtable.RecentPurifiesBuff].up and buff[classtable.WeaponsofOrderBuff].remains <14 ) and talents[classtable.ImprovedInvokeNiuzaotheBlackOx]) and cooldown[classtable.InvokeNiuzaotheBlackOx].ready then
-        MaxDps:GlowCooldown(classtable.InvokeNiuzaotheBlackOx, cooldown[classtable.InvokeNiuzaotheBlackOx].ready)
-    end
-    if (MaxDps:CheckSpellUsable(classtable.InvokeNiuzaotheBlackOx, 'InvokeNiuzaotheBlackOx')) and (( debuff[classtable.WeaponsofOrderDebuffDeBuff].count >3 ) and not talents[classtable.ImprovedInvokeNiuzaotheBlackOx]) and cooldown[classtable.InvokeNiuzaotheBlackOx].ready then
-        MaxDps:GlowCooldown(classtable.InvokeNiuzaotheBlackOx, cooldown[classtable.InvokeNiuzaotheBlackOx].ready)
-    end
-    if (MaxDps:CheckSpellUsable(classtable.InvokeNiuzaotheBlackOx, 'InvokeNiuzaotheBlackOx')) and (( not talents[classtable.WeaponsofOrder] )) and cooldown[classtable.InvokeNiuzaotheBlackOx].ready then
-        MaxDps:GlowCooldown(classtable.InvokeNiuzaotheBlackOx, cooldown[classtable.InvokeNiuzaotheBlackOx].ready)
-    end
-    if (MaxDps:CheckSpellUsable(classtable.WeaponsofOrder, 'WeaponsofOrder')) and (( talents[classtable.WeaponsofOrder] ) and not talents[classtable.ImprovedInvokeNiuzaotheBlackOx]) and cooldown[classtable.WeaponsofOrder].ready then
-        MaxDps:GlowCooldown(classtable.WeaponsofOrder, cooldown[classtable.WeaponsofOrder].ready)
-    end
-    if (MaxDps:CheckSpellUsable(classtable.KegSmash, 'KegSmash')) and (( timeInCombat - WoOLastUsed <2 )) and cooldown[classtable.KegSmash].ready then
-        return classtable.KegSmash
-    end
-    if (MaxDps:CheckSpellUsable(classtable.KegSmash, 'KegSmash')) and (( buff[classtable.WeaponsofOrderBuff].remains <gcd * 2 and buff[classtable.WeaponsofOrderBuff].up ) and not talents[classtable.ImprovedInvokeNiuzaotheBlackOx]) and cooldown[classtable.KegSmash].ready then
-        return classtable.KegSmash
-    end
-    if (MaxDps:CheckSpellUsable(classtable.KegSmash, 'KegSmash')) and (( buff[classtable.WeaponsofOrderBuff].remains <gcd * 2 ) and talents[classtable.ImprovedInvokeNiuzaotheBlackOx]) and cooldown[classtable.KegSmash].ready then
-        return classtable.KegSmash
-    end
-    if (MaxDps:CheckSpellUsable(classtable.RisingSunKick, 'RisingSunKick')) and cooldown[classtable.RisingSunKick].ready then
-        return classtable.RisingSunKick
-    end
-    if (MaxDps:CheckSpellUsable(classtable.BlackOxBrew, 'BlackOxBrew')) and (( Energy + EnergyRegen <= 40 )) and cooldown[classtable.BlackOxBrew].ready then
-        return classtable.BlackOxBrew
-    end
-    if (MaxDps:CheckSpellUsable(classtable.TigerPalm, 'TigerPalm')) and (( buff[classtable.BlackoutComboBuff].up and targets == 1 )) and cooldown[classtable.TigerPalm].ready then
-        return classtable.TigerPalm
-    end
-    if (MaxDps:CheckSpellUsable(classtable.BreathofFire, 'BreathofFire')) and (( buff[classtable.CharredPassionsBuff].remains <cooldown[classtable.BlackoutKick].remains )) and cooldown[classtable.BreathofFire].ready then
-        return classtable.BreathofFire
-    end
-    if (MaxDps:CheckSpellUsable(classtable.KegSmash, 'KegSmash')) and (( buff[classtable.WeaponsofOrderBuff].up and debuff[classtable.WeaponsofOrderDebuffDeBuff].count <= 3 )) and cooldown[classtable.KegSmash].ready then
-        return classtable.KegSmash
-    end
-    if (MaxDps:CheckSpellUsable(classtable.ExplodingKeg, 'ExplodingKeg')) and (( buff[classtable.BonedustBrewBuff].up )) and cooldown[classtable.ExplodingKeg].ready then
-        return classtable.ExplodingKeg
-    end
-    if (MaxDps:CheckSpellUsable(classtable.ExplodingKeg, 'ExplodingKeg')) and (( cooldown[classtable.BonedustBrew].remains >= 20 )) and cooldown[classtable.ExplodingKeg].ready then
-        return classtable.ExplodingKeg
-    end
-    if (MaxDps:CheckSpellUsable(classtable.ExplodingKeg, 'ExplodingKeg')) and (( not talents[classtable.BonedustBrew] )) and cooldown[classtable.ExplodingKeg].ready then
-        return classtable.ExplodingKeg
-    end
-    if (MaxDps:CheckSpellUsable(classtable.KegSmash, 'KegSmash')) and cooldown[classtable.KegSmash].ready then
-        return classtable.KegSmash
-    end
-    if (MaxDps:CheckSpellUsable(classtable.RushingJadeWind, 'RushingJadeWind')) and (talents[classtable.RushingJadeWind]) and cooldown[classtable.RushingJadeWind].ready then
-        return classtable.RushingJadeWind
-    end
-    if (MaxDps:CheckSpellUsable(classtable.BreathofFire, 'BreathofFire')) and cooldown[classtable.BreathofFire].ready then
-        return classtable.BreathofFire
-    end
-    if (MaxDps:CheckSpellUsable(classtable.TigerPalm, 'TigerPalm')) and (targets == 1 and not talents[classtable.BlackoutCombo]) and cooldown[classtable.TigerPalm].ready then
-        return classtable.TigerPalm
-    end
-    if (MaxDps:CheckSpellUsable(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (targets >1) and cooldown[classtable.SpinningCraneKick].ready then
-        return classtable.SpinningCraneKick
-    end
-    if (MaxDps:CheckSpellUsable(classtable.ChiBurst, 'ChiBurst')) and cooldown[classtable.ChiBurst].ready then
-        return classtable.ChiBurst
-    end
+
+
+local function ClearCDs()
+    MaxDps:GlowCooldown(classtable.ChiBurst, false)
+    MaxDps:GlowCooldown(classtable.SpearHandStrike, false)
+    MaxDps:GlowCooldown(classtable.DiffuseMagic, false)
+    MaxDps:GlowCooldown(classtable.Vivify, false)
+    MaxDps:GlowCooldown(classtable.PurifyingBrew, false)
+    MaxDps:GlowCooldown(classtable.CelestialBrew, false)
+    MaxDps:GlowCooldown(classtable.DampenHarm, false)
+    MaxDps:GlowCooldown(classtable.FortifyingBrew, false)
+    MaxDps:GlowCooldown(classtable.ExpelHarm, false)
+    MaxDps:GlowCooldown(classtable.trinket1, false)
+    MaxDps:GlowCooldown(classtable.trinket2, false)
+    MaxDps:GlowCooldown(classtable.WeaponsofOrder, false)
 end
 
 function Brewmaster:callaction()
@@ -218,60 +224,113 @@ function Brewmaster:callaction()
     if (MaxDps:CheckSpellUsable(classtable.DiffuseMagic, 'DiffuseMagic')) and cooldown[classtable.DiffuseMagic].ready then
         MaxDps:GlowCooldown(classtable.DiffuseMagic, cooldown[classtable.DiffuseMagic].ready)
     end
-    if (MaxDps:CheckSpellUsable(classtable.Vivify, 'Vivify')) and (curentHP <= 65 and buff[classtable.VivaciousVivificationBuff].up) and cooldown[classtable.Vivify].ready then
+    if (MaxDps:CheckSpellUsable(classtable.Vivify, 'Vivify')) and (healthPerc <= 65 and buff[classtable.VivaciousVivificationBuff].up) and cooldown[classtable.Vivify].ready then
         MaxDps:GlowCooldown(classtable.Vivify, cooldown[classtable.Vivify].ready)
     end
-    --if (MaxDps:CheckSpellUsable(classtable.PurifyingBrew, 'PurifyingBrew')) and ((UnitThreatSituation('player') == 2 or UnitThreatSituation('player') == 3) and true and ( buff[classtable.PurifiedChiBuff].up and buff[classtable.PurifiedChiBuff].remains <1.5 * gcd ) or cooldown[classtable.CelestialBrew].remains <2 * gcd and cooldown[classtable.PurifyingBrew].charges >1.5) and cooldown[classtable.PurifyingBrew].ready then
-    --    MaxDps:GlowCooldown(classtable.PurifyingBrew, cooldown[classtable.PurifyingBrew].ready)
-    --end
-    if (MaxDps:CheckSpellUsable(classtable.CelestialBrew, 'CelestialBrew')) and ((UnitThreatSituation('player') == 2 or UnitThreatSituation('player') == 3) and ( not talents[classtable.ImprovedCelestialBrew] or buff[classtable.PurifiedChiBuff].up ) and ( not buff[classtable.BlackoutComboBuff].up )) and cooldown[classtable.CelestialBrew].ready then
+    if (MaxDps:CheckSpellUsable(classtable.PurifyingBrew, 'PurifyingBrew')) and ((UnitThreatSituation('player') == 2 or UnitThreatSituation('player') == 3) and false and (cooldown[classtable.PurifyingBrew].fullRecharge <gcd or buff[classtable.PurifiedChiBuff].up and buff[classtable.PurifiedChiBuff].remains <1.5*gcd) or cooldown[classtable.CelestialBrew].remains <2*gcd and cooldown[classtable.PurifyingBrew].charges >1.5) and cooldown[classtable.PurifyingBrew].ready then
+        MaxDps:GlowCooldown(classtable.PurifyingBrew, cooldown[classtable.PurifyingBrew].ready)
+    end
+    if (MaxDps:CheckSpellUsable(classtable.CelestialBrew, 'CelestialBrew')) and ((UnitThreatSituation('player') == 2 or UnitThreatSituation('player') == 3) and not buff[classtable.CelestialBrewBuff].up and (not talents[classtable.ImprovedCelestialBrew] or buff[classtable.PurifiedChiBuff].up) and (not false or not buff[classtable.BlackoutComboBuff].up)) and cooldown[classtable.CelestialBrew].ready then
         MaxDps:GlowCooldown(classtable.CelestialBrew, cooldown[classtable.CelestialBrew].ready)
     end
-    --if (MaxDps:CheckSpellUsable(classtable.PurifyingBrew, 'PurifyingBrew')) and (( not buff[classtable.BlackoutComboBuff].up ) and staggerPercent >= 12) and cooldown[classtable.PurifyingBrew].ready then
-    --    MaxDps:GlowCooldown(classtable.PurifyingBrew, cooldown[classtable.PurifyingBrew].ready)
-    --end
-    --if (MaxDps:CheckSpellUsable(classtable.PurifyingBrew, 'PurifyingBrew')) and (( not buff[classtable.BlackoutComboBuff].up ) and staggerPercent >= 12 * 0.5) and cooldown[classtable.PurifyingBrew].ready then
-    --    MaxDps:GlowCooldown(classtable.PurifyingBrew, cooldown[classtable.PurifyingBrew].ready)
-    --end
-    --if (MaxDps:CheckSpellUsable(classtable.PurifyingBrew, 'PurifyingBrew')) and (( not buff[classtable.BlackoutComboBuff].up ) and staggerPercent >= 6) and cooldown[classtable.PurifyingBrew].ready then
-    --    MaxDps:GlowCooldown(classtable.PurifyingBrew, cooldown[classtable.PurifyingBrew].ready)
-    --end
-    --if (MaxDps:CheckSpellUsable(classtable.PurifyingBrew, 'PurifyingBrew')) and (( not buff[classtable.BlackoutComboBuff].up ) and staggerPercent >= 6 * 0.5) and cooldown[classtable.PurifyingBrew].ready then
-    --    MaxDps:GlowCooldown(classtable.PurifyingBrew, cooldown[classtable.PurifyingBrew].ready)
-    --end
-    --if (MaxDps:CheckSpellUsable(classtable.PurifyingBrew, 'PurifyingBrew')) and (( not buff[classtable.BlackoutComboBuff].up ) and staggerPercent >20) and cooldown[classtable.PurifyingBrew].ready then
-    --    MaxDps:GlowCooldown(classtable.PurifyingBrew, cooldown[classtable.PurifyingBrew].ready)
-    --end
-    --if (MaxDps:CheckSpellUsable(classtable.PurifyingBrew, 'PurifyingBrew')) and (( not buff[classtable.BlackoutComboBuff].up ) and staggerPercent >10) and cooldown[classtable.PurifyingBrew].ready then
-    --    MaxDps:GlowCooldown(classtable.PurifyingBrew, cooldown[classtable.PurifyingBrew].ready)
-    --end
-    if (MaxDps:CheckSpellUsable(classtable.DampenHarm, 'DampenHarm')) and (curentHP <75 and not buff[classtable.FortifyingBrewBuff].up) and cooldown[classtable.DampenHarm].ready then
+    if (MaxDps:CheckSpellUsable(classtable.PurifyingBrew, 'PurifyingBrew')) and (MaxDps:NumGroupFriends() >1 and (not false or not buff[classtable.BlackoutComboBuff].up) and 12 >0 and staggerPercent >= 12) and cooldown[classtable.PurifyingBrew].ready then
+        MaxDps:GlowCooldown(classtable.PurifyingBrew, cooldown[classtable.PurifyingBrew].ready)
+    end
+    if (MaxDps:CheckSpellUsable(classtable.PurifyingBrew, 'PurifyingBrew')) and (MaxDps:NumGroupFriends() <= 1 and (not false or not buff[classtable.BlackoutComboBuff].up) and 12 >0 and staggerPercent >= 12*0.5) and cooldown[classtable.PurifyingBrew].ready then
+        MaxDps:GlowCooldown(classtable.PurifyingBrew, cooldown[classtable.PurifyingBrew].ready)
+    end
+    if (MaxDps:CheckSpellUsable(classtable.PurifyingBrew, 'PurifyingBrew')) and (MaxDps:NumGroupFriends() >1 and (false and not buff[classtable.BlackoutComboBuff].up) and 6 >0 and staggerPercent >= 6) and cooldown[classtable.PurifyingBrew].ready then
+        MaxDps:GlowCooldown(classtable.PurifyingBrew, cooldown[classtable.PurifyingBrew].ready)
+    end
+    if (MaxDps:CheckSpellUsable(classtable.PurifyingBrew, 'PurifyingBrew')) and (MaxDps:NumGroupFriends() <= 1 and (not false or not buff[classtable.BlackoutComboBuff].up) and 6 >0 and staggerPercent >= 6*0.5) and cooldown[classtable.PurifyingBrew].ready then
+        MaxDps:GlowCooldown(classtable.PurifyingBrew, cooldown[classtable.PurifyingBrew].ready)
+    end
+    if (MaxDps:CheckSpellUsable(classtable.PurifyingBrew, 'PurifyingBrew')) and (MaxDps:NumGroupFriends() >1 and (not false or not buff[classtable.BlackoutComboBuff].up) and 12 == 0 and 6 == 0 and staggerPercent >20) and cooldown[classtable.PurifyingBrew].ready then
+        MaxDps:GlowCooldown(classtable.PurifyingBrew, cooldown[classtable.PurifyingBrew].ready)
+    end
+    if (MaxDps:CheckSpellUsable(classtable.PurifyingBrew, 'PurifyingBrew')) and (MaxDps:NumGroupFriends() <= 1 and (not false or not buff[classtable.BlackoutComboBuff].up) and 12 == 0 and 6 == 0 and staggerPercent >10) and cooldown[classtable.PurifyingBrew].ready then
+        MaxDps:GlowCooldown(classtable.PurifyingBrew, cooldown[classtable.PurifyingBrew].ready)
+    end
+    if (MaxDps:CheckSpellUsable(classtable.DampenHarm, 'DampenHarm')) and (healthPerc <75 and MaxDps.incoming_damage_3 >curentHP*(0.2+(0.2 * MaxDps:NumGroupFriends() >1)) and not buff[classtable.FortifyingBrewBuff].up) and cooldown[classtable.DampenHarm].ready then
         MaxDps:GlowCooldown(classtable.DampenHarm, cooldown[classtable.DampenHarm].ready)
     end
-    if (MaxDps:CheckSpellUsable(classtable.FortifyingBrew, 'FortifyingBrew')) and (curentHP <50 and ( not buff[classtable.DampenHarmBuff].up )) and cooldown[classtable.FortifyingBrew].ready then
+    if (MaxDps:CheckSpellUsable(classtable.FortifyingBrew, 'FortifyingBrew')) and (healthPerc <50 and MaxDps.incoming_damage_3 >curentHP*(0.2+(0.2 * MaxDps:NumGroupFriends() >1)) and (not buff[classtable.DampenHarmBuff].up)) and cooldown[classtable.FortifyingBrew].ready then
         MaxDps:GlowCooldown(classtable.FortifyingBrew, cooldown[classtable.FortifyingBrew].ready)
     end
     if (MaxDps:CheckSpellUsable(classtable.TouchofDeath, 'TouchofDeath')) and cooldown[classtable.TouchofDeath].ready then
-        return classtable.TouchofDeath
+        if not setSpell then setSpell = classtable.TouchofDeath end
     end
-    local itemsCheck = Brewmaster:items()
-    if itemsCheck then
-        return itemsCheck
-    end
-    if (MaxDps:CheckSpellUsable(classtable.ExpelHarm, 'ExpelHarm')) and (buff[classtable.GiftoftheOxBuff].count >4 and curentHP <65) and cooldown[classtable.ExpelHarm].ready then
+    if (MaxDps:CheckSpellUsable(classtable.ExpelHarm, 'ExpelHarm')) and (buff[classtable.GiftoftheOxBuff].count >4 and healthPerc <65) and cooldown[classtable.ExpelHarm].ready then
         MaxDps:GlowCooldown(classtable.ExpelHarm, cooldown[classtable.ExpelHarm].ready)
     end
-    if (talents[classtable.PresstheAdvantage]) then
-        local rotation_ptaCheck = Brewmaster:rotation_pta()
-        if rotation_ptaCheck then
-            return Brewmaster:rotation_pta()
-        end
+    if (MaxDps:CheckSpellUsable(classtable.trinket1, 'trinket1')) and cooldown[classtable.trinket1].ready then
+        MaxDps:GlowCooldown(classtable.trinket1, cooldown[classtable.trinket1].ready)
     end
-    if (not talents[classtable.PresstheAdvantage]) then
-        local rotation_bocCheck = Brewmaster:rotation_boc()
-        if rotation_bocCheck then
-            return Brewmaster:rotation_boc()
-        end
+    if (MaxDps:CheckSpellUsable(classtable.trinket2, 'trinket2')) and cooldown[classtable.trinket2].ready then
+        MaxDps:GlowCooldown(classtable.trinket2, cooldown[classtable.trinket2].ready)
+    end
+    if (MaxDps:CheckSpellUsable(classtable.BlackOxBrew, 'BlackOxBrew')) and (Energy <40) and cooldown[classtable.BlackOxBrew].ready then
+        if not setSpell then setSpell = classtable.BlackOxBrew end
+    end
+    if (MaxDps:CheckSpellUsable(classtable.CelestialBrew, 'CelestialBrew')) and ((not false or not buff[classtable.BlackoutComboBuff].up) and buff[classtable.AspectofHarmonyAccumulatorBuff].value >0.3*curentHP and buff[classtable.WeaponsofOrderBuff].up and not debuff[classtable.AspectofHarmonyDamageDeBuff].up) and cooldown[classtable.CelestialBrew].ready then
+        MaxDps:GlowCooldown(classtable.CelestialBrew, cooldown[classtable.CelestialBrew].ready)
+    end
+    if (MaxDps:CheckSpellUsable(classtable.CelestialBrew, 'CelestialBrew')) and ((not false or not buff[classtable.BlackoutComboBuff].up) and buff[classtable.AspectofHarmonyAccumulatorBuff].value >0.3*curentHP and not (talents[classtable.WeaponsofOrder] and true or false) and not debuff[classtable.AspectofHarmonyDamageDeBuff].up) and cooldown[classtable.CelestialBrew].ready then
+        MaxDps:GlowCooldown(classtable.CelestialBrew, cooldown[classtable.CelestialBrew].ready)
+    end
+    if (MaxDps:CheckSpellUsable(classtable.CelestialBrew, 'CelestialBrew')) and ((not false or not buff[classtable.BlackoutComboBuff].up) and ttd <20 and ttd >14 and buff[classtable.AspectofHarmonyAccumulatorBuff].value >0.2*curentHP) and cooldown[classtable.CelestialBrew].ready then
+        MaxDps:GlowCooldown(classtable.CelestialBrew, cooldown[classtable.CelestialBrew].ready)
+    end
+    if (MaxDps:CheckSpellUsable(classtable.CelestialBrew, 'CelestialBrew')) and ((not false or not buff[classtable.BlackoutComboBuff].up) and buff[classtable.AspectofHarmonyAccumulatorBuff].value >0.3*curentHP and cooldown[classtable.WeaponsofOrder].remains >20 and not debuff[classtable.AspectofHarmonyDamageDeBuff].up) and cooldown[classtable.CelestialBrew].ready then
+        MaxDps:GlowCooldown(classtable.CelestialBrew, cooldown[classtable.CelestialBrew].ready)
+    end
+    if (MaxDps:CheckSpellUsable(classtable.BlackoutKick, 'BlackoutKick')) and cooldown[classtable.BlackoutKick].ready then
+        if not setSpell then setSpell = classtable.BlackoutKick end
+    end
+    if (MaxDps:CheckSpellUsable(classtable.ChiBurst, 'ChiBurst') and talents[classtable.ChiBurst]) and cooldown[classtable.ChiBurst].ready then
+        MaxDps:GlowCooldown(classtable.ChiBurst, cooldown[classtable.ChiBurst].ready)
+    end
+    if (MaxDps:CheckSpellUsable(classtable.WeaponsofOrder, 'WeaponsofOrder') and talents[classtable.WeaponsofOrder]) and cooldown[classtable.WeaponsofOrder].ready then
+        MaxDps:GlowCooldown(classtable.WeaponsofOrder, cooldown[classtable.WeaponsofOrder].ready)
+    end
+    if (MaxDps:CheckSpellUsable(classtable.RisingSunKick, 'RisingSunKick')) and (not (talents[classtable.FluidityofMotion] and true or false)) and cooldown[classtable.RisingSunKick].ready then
+        if not setSpell then setSpell = classtable.RisingSunKick end
+    end
+    if (MaxDps:CheckSpellUsable(classtable.TigerPalm, 'TigerPalm')) and (buff[classtable.BlackoutComboBuff].up) and cooldown[classtable.TigerPalm].ready then
+        if not setSpell then setSpell = classtable.TigerPalm end
+    end
+    if (MaxDps:CheckSpellUsable(classtable.KegSmash, 'KegSmash')) and ((talents[classtable.ScaldingBrew] and true or false)) and cooldown[classtable.KegSmash].ready then
+        if not setSpell then setSpell = classtable.KegSmash end
+    end
+    if (MaxDps:CheckSpellUsable(classtable.SpinningCraneKick, 'SpinningCraneKick')) and ((talents[classtable.CharredPassions] and true or false) and (talents[classtable.ScaldingBrew] and true or false) and buff[classtable.CharredPassionsBuff].up and buff[classtable.CharredPassionsBuff].remains <3 and debuff[classtable.BreathofFireDeBuff].remains <9 and targets >4) and cooldown[classtable.SpinningCraneKick].ready then
+        if not setSpell then setSpell = classtable.SpinningCraneKick end
+    end
+    if (MaxDps:CheckSpellUsable(classtable.RisingSunKick, 'RisingSunKick')) and ((talents[classtable.FluidityofMotion] and true or false)) and cooldown[classtable.RisingSunKick].ready then
+        if not setSpell then setSpell = classtable.RisingSunKick end
+    end
+    if (MaxDps:CheckSpellUsable(classtable.PurifyingBrew, 'PurifyingBrew')) and (not buff[classtable.BlackoutComboBuff].up) and cooldown[classtable.PurifyingBrew].ready then
+        MaxDps:GlowCooldown(classtable.PurifyingBrew, cooldown[classtable.PurifyingBrew].ready)
+    end
+    if (MaxDps:CheckSpellUsable(classtable.BreathofFire, 'BreathofFire')) and ((not buff[classtable.CharredPassionsBuff].up and (not (talents[classtable.ScaldingBrew] and true or false) or targets <5)) or not (talents[classtable.CharredPassions] and true or false) or (debuff[classtable.BreathofFireDeBuff].remains <3 and (talents[classtable.ScaldingBrew] and true or false))) and cooldown[classtable.BreathofFire].ready then
+        if not setSpell then setSpell = classtable.BreathofFire end
+    end
+    if (MaxDps:CheckSpellUsable(classtable.ExplodingKeg, 'ExplodingKeg')) and cooldown[classtable.ExplodingKeg].ready then
+        if not setSpell then setSpell = classtable.ExplodingKeg end
+    end
+    if (MaxDps:CheckSpellUsable(classtable.KegSmash, 'KegSmash')) and cooldown[classtable.KegSmash].ready then
+        if not setSpell then setSpell = classtable.KegSmash end
+    end
+    if (MaxDps:CheckSpellUsable(classtable.RushingJadeWind, 'RushingJadeWind')) and cooldown[classtable.RushingJadeWind].ready then
+        if not setSpell then setSpell = classtable.RushingJadeWind end
+    end
+    if (MaxDps:CheckSpellUsable(classtable.InvokeNiuzao, 'InvokeNiuzao')) and cooldown[classtable.InvokeNiuzao].ready then
+        if not setSpell then setSpell = classtable.InvokeNiuzao end
+    end
+    if (MaxDps:CheckSpellUsable(classtable.TigerPalm, 'TigerPalm')) and (Energy >40-cooldown[classtable.KegSmash].remains * EnergyRegen) and cooldown[classtable.TigerPalm].ready then
+        if not setSpell then setSpell = classtable.TigerPalm end
+    end
+    if (MaxDps:CheckSpellUsable(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (Energy >40-cooldown[classtable.KegSmash].remains * EnergyRegen) and cooldown[classtable.SpinningCraneKick].ready then
+        if not setSpell then setSpell = classtable.SpinningCraneKick end
     end
 end
 function Monk:Brewmaster()
@@ -284,57 +343,78 @@ function Monk:Brewmaster()
     debuff = fd.debuff
     talents = fd.talents
     targets = MaxDps:SmartAoe()
-    Mana = UnitPower('player', ManaPT)
-    ManaMax = UnitPowerMax('player', ManaPT)
-    ManaDeficit = ManaMax - Mana
     targetHP = UnitHealth('target')
     targetmaxHP = UnitHealthMax('target')
-    targethealthPerc = (targetHP / targetmaxHP) * 100
+    targethealthPerc = (targetHP >0 and targetmaxHP >0 and (targetHP / targetmaxHP) * 100) or 100
     curentHP = UnitHealth('player')
     maxHP = UnitHealthMax('player')
     healthPerc = (curentHP / maxHP) * 100
     timeInCombat = MaxDps.combatTime or 0
     classtable = MaxDps.SpellTable
-    SpellHaste = UnitSpellHaste('player')
-    SpellCrit = GetCritChance()
-    Chi = UnitPower('player', ChiPT)
-    ChiMax = UnitPowerMax('player', ChiPT)
-    ChiDeficit = ChiMax - Chi
+    local trinket1ID = GetInventoryItemID('player', 13)
+    local trinket2ID = GetInventoryItemID('player', 14)
+    classtable.trinket1 = (trinket1ID and select(2,GetItemSpell(trinket1ID)) ) or 0
+    classtable.trinket2 = (trinket2ID and select(2,GetItemSpell(trinket2ID)) ) or 0
     Energy = UnitPower('player', EnergyPT)
     EnergyMax = UnitPowerMax('player', EnergyPT)
     EnergyDeficit = EnergyMax - Energy
-    EnergyRegen = GetPowerRegenForPowerType(Enum.PowerType.Energy)
+    EnergyPerc = (Energy / EnergyMax) * 100
+    EnergyRegen = GetPowerRegenForPowerType(EnergyPT)
     EnergyTimeToMax = EnergyDeficit / EnergyRegen
+    Chi = UnitPower('player', ChiPT)
+    ChiMax = UnitPowerMax('player', ChiPT)
+    ChiDeficit = ChiMax - Chi
+    ChiPerc = (Chi / ChiMax) * 100
+    ChiRegen = GetPowerRegenForPowerType(ChiPT)
+    ChiTimeToMax = ChiDeficit / ChiRegen
+    Mana = UnitPower('player', ManaPT)
+    ManaMax = UnitPowerMax('player', ManaPT)
+    ManaDeficit = ManaMax - Mana
+    ManaPerc = (Mana / ManaMax) * 100
+    ManaRegen = GetPowerRegenForPowerType(ManaPT)
+    ManaTimeToMax = ManaDeficit / ManaRegen
+    SpellHaste = UnitSpellHaste('player')
+    SpellCrit = GetCritChance()
     staggerAmount = UnitStagger('player')
     staggerPercent = (staggerAmount / maxHP) * 100
     WoOLastUsed = 0
-    for spellId in pairs(MaxDps.Flags) do
-        self.Flags[spellId] = false
-        self:ClearGlowIndependent(spellId, spellId)
-    end
-    classtable.WeaponsofOrderDebuffDeBuff = 387179
-    classtable.PresstheAdvantageBuff = 418361
-    classtable.BlackoutComboBuff = 228563
-    classtable.ExplodingKegBuff = 325153
-    classtable.CharredPassionsBuff = 386963
-    classtable.BonedustBrewBuff = 386276
-    classtable.RecentPurifiesBuff = 325092
-    classtable.InvokeNiuzaotheBlackOxBuff = 132578
-    classtable.WeaponsofOrderBuff = 387184
+    --for spellId in pairs(MaxDps.Flags) do
+    --    self.Flags[spellId] = false
+    --    self:ClearGlowIndependent(spellId, spellId)
+    --end
     classtable.VivaciousVivificationBuff = 392883
     classtable.PurifiedChiBuff = 325092
+    classtable.CelestialBrewBuff = 322507
+    classtable.BlackoutComboBuff = 228563
     classtable.FortifyingBrewBuff = 120954
-    classtable.DampenHarmBuff = 175395
-    classtable.GiftoftheOxBuff = 224863
-    classtable.BlackoutKick = MaxDps:FindSpell(100784) and 100784 or MaxDps:FindSpell(205523) and 205523
+    classtable.DampenHarmBuff = 122278
+    classtable.GiftoftheOxBuff = 124502
+    classtable.AspectofHarmonyAccumulatorBuff = 450521
+    classtable.WeaponsofOrderBuff = 387184
+    classtable.CharredPassionsBuff = 386963
+    classtable.AspectofHarmonyDamageDeBuff = 450763
+    classtable.BreathofFireDeBuff = 123725
+    classtable.InvokeNiuzao = 322740
 
-    local precombatCheck = Brewmaster:precombat()
-    if precombatCheck then
-        return Brewmaster:precombat()
+    local function debugg()
+        talents[classtable.ChiBurst] = 1
+        talents[classtable.ImprovedCelestialBrew] = 1
+        talents[classtable.WeaponsofOrder] = 1
+        talents[classtable.FluidityofMotion] = 1
+        talents[classtable.ScaldingBrew] = 1
+        talents[classtable.CharredPassions] = 1
     end
 
-    local callactionCheck = Brewmaster:callaction()
-    if callactionCheck then
-        return Brewmaster:callaction()
-    end
+
+    --if MaxDps.db.global.debugMode then
+    --   debugg()
+    --end
+
+    setSpell = nil
+    ClearCDs()
+
+    Brewmaster:precombat()
+
+    Brewmaster:callaction()
+    if setSpell then return setSpell end
 end
