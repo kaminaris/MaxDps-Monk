@@ -23,5 +23,6 @@ Specialization\Windwalker.lua
 
 #@version-mists@
 Specialization\MoP\Brewmaster.lua
+Specialization\MoP\Mistweaver.lua
 Specialization\Mop\Windwalker.lua
 #@end-version-mists@
