@@ -278,9 +278,9 @@ function Mistweaver:crane()
     if (MaxDps:CheckSpellUsable(classtable.ThunderFocusTea, 'ThunderFocusTea')) and (talents[classtable.AncientTeachings] and buff[classtable.AncientTeachingsBuff].remains <gcd) and cooldown[classtable.ThunderFocusTea].ready then
         if not setSpell then setSpell = classtable.ThunderFocusTea end
     end
-    if (MaxDps:CheckSpellUsable(classtable.EssenceFont, 'EssenceFont')) and (talents[classtable.AncientTeachings] and buff[classtable.AncientTeachingsBuff].remains <gcd) and cooldown[classtable.EssenceFont].ready then
-        if not setSpell then setSpell = classtable.EssenceFont end
-    end
+    --if (MaxDps:CheckSpellUsable(classtable.EssenceFont, 'EssenceFont')) and (talents[classtable.AncientTeachings] and buff[classtable.AncientTeachingsBuff].remains <gcd) and cooldown[classtable.EssenceFont].ready then
+    --    if not setSpell then setSpell = classtable.EssenceFont end
+    --end
     if (MaxDps:CheckSpellUsable(classtable.JadefireStomp, 'JadefireStomp')) and (talents[classtable.AncientTeachings] and buff[classtable.AncientTeachingsBuff].remains <gcd) and cooldown[classtable.JadefireStomp].ready then
         if not setSpell then setSpell = classtable.JadefireStomp end
     end
