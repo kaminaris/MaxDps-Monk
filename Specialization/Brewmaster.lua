@@ -251,10 +251,10 @@ function Brewmaster:callaction()
     if (MaxDps:CheckSpellUsable(classtable.PurifyingBrew, 'PurifyingBrew')) and (MaxDps:NumGroupFriends() <= 1 and (not false or not buff[classtable.BlackoutComboBuff].up) and 12 == 0 and 6 == 0 and staggerPercent >10) and cooldown[classtable.PurifyingBrew].ready then
         MaxDps:GlowCooldown(classtable.PurifyingBrew, cooldown[classtable.PurifyingBrew].ready)
     end
-    if (MaxDps:CheckSpellUsable(classtable.DampenHarm, 'DampenHarm')) and (healthPerc <75 and MaxDps.incoming_damage_3 >curentHP*(0.2+(0.2 * MaxDps:NumGroupFriends() >1)) and not buff[classtable.FortifyingBrewBuff].up) and cooldown[classtable.DampenHarm].ready then
+    if (MaxDps:CheckSpellUsable(classtable.DampenHarm, 'DampenHarm')) and (healthPerc <75 and MaxDps.incoming_damage_3 >curentHP*(0.2+(0.2 * MaxDps:NumGroupFriends() >1 and 1 or 0)) and not buff[classtable.FortifyingBrewBuff].up) and cooldown[classtable.DampenHarm].ready then
         MaxDps:GlowCooldown(classtable.DampenHarm, cooldown[classtable.DampenHarm].ready)
     end
-    if (MaxDps:CheckSpellUsable(classtable.FortifyingBrew, 'FortifyingBrew')) and (healthPerc <50 and MaxDps.incoming_damage_3 >curentHP*(0.2+(0.2 * MaxDps:NumGroupFriends() >1)) and (not buff[classtable.DampenHarmBuff].up)) and cooldown[classtable.FortifyingBrew].ready then
+    if (MaxDps:CheckSpellUsable(classtable.FortifyingBrew, 'FortifyingBrew')) and (healthPerc <50 and MaxDps.incoming_damage_3 >curentHP*(0.2+(0.2 * MaxDps:NumGroupFriends() >1 and 1 or 0)) and (not buff[classtable.DampenHarmBuff].up)) and cooldown[classtable.FortifyingBrew].ready then
         MaxDps:GlowCooldown(classtable.FortifyingBrew, cooldown[classtable.FortifyingBrew].ready)
     end
     if (MaxDps:CheckSpellUsable(classtable.TouchofDeath, 'TouchofDeath')) and cooldown[classtable.TouchofDeath].ready then
