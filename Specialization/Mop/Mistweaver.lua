@@ -108,6 +108,8 @@ function Monk:Mistweaver()
     SpellCrit = GetCritChance()
     ManaPerc = (Mana / ManaMax) * 100
 
+    classtable.RisingSunKick = 107428
+
     setSpell = nil
     ClearCDs()
 
