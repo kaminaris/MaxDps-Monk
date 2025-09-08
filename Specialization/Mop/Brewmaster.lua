@@ -157,7 +157,7 @@ function Monk:Brewmaster()
     EnergyTimeToMax = EnergyDeficit / EnergyRegen
     targetHP = UnitHealth('target')
     targetmaxHP = UnitHealthMax('target')
-    targethealthPerc = (targetHP / targetmaxHP) * 100
+    targethealthPerc = (targetHP >0 and targetmaxHP >0 and (targetHP / targetmaxHP) * 100) or 100
     curentHP = UnitHealth('player')
     maxHP = UnitHealthMax('player')
     stance = GetShapeshiftFormID()
