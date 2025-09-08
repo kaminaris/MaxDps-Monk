@@ -107,6 +107,9 @@ function Brewmaster:aoe()
     if (MaxDps:CheckSpellUsable(classtable.BlackoutKick, 'BlackoutKick')) and cooldown[classtable.BlackoutKick].ready then
         if not setSpell then setSpell = classtable.BlackoutKick end
     end
+    if (MaxDps:CheckSpellUsable(classtable.RushingJadeWind, 'RushingJadeWind')) and (Energy >= 40 and targets >= 3) and cooldown[classtable.RushingJadeWind].ready then
+        if not setSpell then setSpell = classtable.RushingJadeWind end
+    end
     if (MaxDps:CheckSpellUsable(classtable.SpinningCraneKick, 'SpinningCraneKick')) and (Energy >= 70 and targets >= 3 and Chi < 5) and cooldown[classtable.SpinningCraneKick].ready then
         if not setSpell then setSpell = classtable.SpinningCraneKick end
     end
