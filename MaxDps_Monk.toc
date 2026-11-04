@@ -1,4 +1,4 @@
-## Title: MaxDps_Monk
+﻿## Title: MaxDps_Monk
 ## Version: @project-version@
 ## Author: Kaminaris
 ## Interface: 120105
@@ -16,14 +16,10 @@
 ## X-Wago-ID: vNAe5ONo
 
 Main.lua
-#@retail@
-Specialization\Brewmaster.lua
-Specialization\Mistweaver.lua
-Specialization\Windwalker.lua
-#@end-retail@
+Specialization\Brewmaster.lua [AllowLoadGameType standard]
+Specialization\Mistweaver.lua [AllowLoadGameType standard]
+Specialization\Windwalker.lua [AllowLoadGameType standard]
 
-#@version-mists@
-Specialization\MoP\Brewmaster.lua
-Specialization\MoP\Mistweaver.lua
-Specialization\Mop\Windwalker.lua
-#@end-version-mists@
+Specialization\MoP\Brewmaster.lua [AllowLoadGameType mists]
+Specialization\MoP\Mistweaver.lua [AllowLoadGameType mists]
+Specialization\Mop\Windwalker.lua [AllowLoadGameType mists]
